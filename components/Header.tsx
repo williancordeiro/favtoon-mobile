@@ -12,9 +12,9 @@ export default function Header(props: ViewProps) {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#007AFF',
-    paddingVertical: 30,
+    paddingVertical: 35,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
   }
-})
+});
