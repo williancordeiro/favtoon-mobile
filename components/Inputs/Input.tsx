@@ -5,7 +5,7 @@ export default function Input(props: TextInputProps) {
     return (
         <TextInput
             {...props}
-            style={styles.input}
+            style={[styles.input, props.style]}
         >
 
         </TextInput>
@@ -16,8 +16,6 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 3,
         borderColor: '#007AFF',
-        borderTopStartRadius: 9,
-        borderBottomStartRadius: 9,
-        marginVertical: 5,
+        flex: 1,
     }
 });
