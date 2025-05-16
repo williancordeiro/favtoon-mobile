@@ -4,25 +4,43 @@ import Input from './Inputs/Input'
 import EditBtn from './Btns/EditBtn'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-
-type UserNameProps = {
+type ProfileInputProps = {
     placeholder: string,
     value?: string,
-    editableInp: boolean,
-    handlePress: () => void,
-    focus: boolean,
+    onChangeText: (text: string) => void,
+    secureTextEntry?: boolean,
 }
 
-export default function UserName({placeholder, value, editableInp, focus, handlePress}: UserNameProps) {
+
+export default function ProfileInput({ placeholder, value, onChangeText, secureTextEntry }: ProfileInputProps) {
+    const [campEdit, setCampEdit] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
+
+    const focusTrue = () => {
+        setIsFocused(true);
+    }
+
+    const blur = () => {
+        setCampEdit(false);
+        setIsFocused(false);
+    }
+
+    const handlePress = () => {
+        setCampEdit(true);
+    }
+
     return (
     <View style={styles.container}>
         <Input 
-            style={styles.input} 
-            placeholder={placeholder} 
-            placeholderTextColor={'#D1D1D6'} 
-            value={value} 
-            editable={editableInp}
-            autoFocus={focus}
+            style={[styles.input, {color: isFocused ? 'black' : 'grey'}]} 
+            placeholderTextColor={'#D1D1D6'}
+            editable={campEdit}
+            onFocus={focusTrue}
+            onBlur={blur}
+            placeholder={placeholder}
+            value={value}
+            onChangeText={onChangeText}
+            secureTextEntry={secureTextEntry}
         >
 
         </Input>
@@ -48,10 +66,9 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 0,
-        fontSize: 26,
+        fontSize: 28,
         paddingStart: 9,
-        paddingVertical: 9,
-        color: '#D1D1D6'
+        paddingVertical: 12,
     },
     divider: {
         borderWidth: 2,
@@ -59,6 +76,6 @@ const styles = StyleSheet.create({
     },
     btn: {
         borderWidth: 0,
-        paddingHorizontal: 15,
+        paddingHorizontal: 18,
     }
 });

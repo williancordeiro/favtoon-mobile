@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function AddBtn(props: TouchableOpacityProps) {
   return (
-    <TouchableOpacity {...props} style={styles.btn}>
+    <TouchableOpacity {...props} style={[styles.btn, props.style]}>
         <Text style={styles.txt}>+</Text>
     </TouchableOpacity>
   )

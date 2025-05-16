@@ -14,7 +14,18 @@ export default function _layout() {
             ),
             tabBarStyle: {
                 borderTopWidth: 0,
+                paddingVertical: 0,
             },
+            tabBarLabelStyle: {
+                fontSize: 20,
+                paddingVertical: 0,
+                marginTop: 0,
+            },
+            tabBarIconStyle: {
+                margin: 0,
+                padding: 0,
+            },
+            tabBarIcon: () => null
         }}
     />
 }
