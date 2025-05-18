@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
-import ProfileInput from './ProfileInput';
-import TextArea from './Inputs/TextArea';
-import UserIcon from './UserIcon';
+import ProfileInput from '../ProfileInput';
+import TextArea from '../Inputs/TextArea';
+import UserIcon from '../UserIcon';
 
 const generateRandomUserId = (length: number) => {
   return Math.random().toString(36).substr(2, length);
@@ -12,7 +12,7 @@ const id = generateRandomUserId(8);
 
 export default function ProfilePage() {
   const [userName, setUserName] = useState('')
-  const [userId, setUserId] = useState('')
+  const [userId, setUserId] = useState('@'+ id)
   const [userPassword, setUserPass] = useState('')
   //console.log(userName +'\n'+ userId +'\n'+ userPassword)
   

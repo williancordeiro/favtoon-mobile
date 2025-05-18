@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { Tabs } from 'expo-router'
-import ProfilePage from '@/components/ProfilePage'
+import ProfilePage from '@/components/Pages/ProfilePage'
 
 export default function Profile() {
   return (
