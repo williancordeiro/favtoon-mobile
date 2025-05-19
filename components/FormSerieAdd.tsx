@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView, Platform, TouchableNativeFeedback, Keyboard } from 'react-native'
 import React, { useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 
@@ -36,50 +36,58 @@ export default function FormSerieAdd() {
     }
 
     return (
-        <View style={styles.form}>
-            <TouchableOpacity style={styles.uploadImage} onPress={selectImage}>
-                <Image source={image} />
-            </TouchableOpacity>
-            <TextInput 
-                style={styles.inputForm}
-                placeholder='Serie title. . .'
-                placeholderTextColor={'grey'}
-                value={title}
-                onChangeText={setTitle}
-            />
-            <TextInput
-                keyboardType='numeric'
-                maxLength={4} 
-                style={styles.inputForm}
-                placeholder='2025'
-                value={year}
-            />
-            <TextInput 
-                style={styles.inputForm}
-                placeholder='Genre. . .'
-                placeholderTextColor={'grey'}
-                value={genre}
-                onChangeText={setGenre}
-            />
-            <TextInput
-                keyboardType='numeric'
-                maxLength={2} 
-                style={styles.inputForm}
-                placeholder='Nº of seasons'
-                placeholderTextColor={'grey'}
-                value={season}
-            />
-            <TextInput 
-                style={styles.inputFormSinopse}
-                placeholder='Sinopse. . .'
-                placeholderTextColor={'grey'}
-                value={sinopse}
-                onChangeText={setSinopse}
-            />
-            <TouchableOpacity style={styles.buttonForm}>
-                <Text style={[{color: '#FFFFFF', fontSize: 21, fontWeight: 'bold'}]}>Salvar</Text>
-            </TouchableOpacity>
-        </View>
+        <TouchableNativeFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={styles.form}>
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                    <ScrollView>                
+                        <TouchableOpacity style={styles.uploadImage} onPress={selectImage}>
+                            <Image source={image} />
+                        </TouchableOpacity>
+                        <TextInput 
+                            style={styles.inputForm}
+                            placeholder='Serie title. . .'
+                            placeholderTextColor={'grey'}
+                            value={title}
+                            onChangeText={setTitle}
+                        />
+                        <TextInput
+                            keyboardType='numeric'
+                            maxLength={4} 
+                            style={styles.inputForm}
+                            placeholder='2025'
+                            value={year}
+                            onChangeText={setYear}
+                        />
+                        <TextInput 
+                            style={styles.inputForm}
+                            placeholder='Genre. . .'
+                            placeholderTextColor={'grey'}
+                            value={genre}
+                            onChangeText={setGenre}
+                        />
+                        <TextInput
+                            keyboardType='numeric'
+                            maxLength={2} 
+                            style={styles.inputForm}
+                            placeholder='Nº of seasons'
+                            placeholderTextColor={'grey'}
+                            value={season}
+                            onChangeText={setSeason}
+                        />
+                        <TextInput 
+                            style={styles.inputFormSinopse}
+                            placeholder='Sinopse. . .'
+                            placeholderTextColor={'grey'}
+                            value={sinopse}
+                            onChangeText={setSinopse}
+                        />
+                        <TouchableOpacity style={styles.buttonForm}>
+                            <Text style={[{color: '#FFFFFF', fontSize: 21, fontWeight: 'bold'}]}>Salvar</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
+                </KeyboardAvoidingView>            
+            </View>
+        </TouchableNativeFeedback>
     )
 }
 
@@ -92,7 +100,7 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderRadius: 9,
         fontSize: 21,
-        paddingVertical: 9,
+        paddingVertical: 12,
         paddingStart: 9,
         marginBottom: 9,
     },
@@ -102,14 +110,14 @@ const styles = StyleSheet.create({
         borderRadius: 9,
         fontSize: 21,
         paddingTop: 9,
-        paddingBottom: 50,
+        paddingBottom: 90,
         paddingStart: 9,
         marginBottom: 9,
     },
     buttonForm: {
         backgroundColor: '#007AFF',
         borderRadius: 9,
-        paddingVertical: 9,
+        paddingVertical: 12,
         justifyContent: 'center',
         alignItems: 'center',
     },

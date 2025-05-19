@@ -9,21 +9,17 @@ export default function _layout() {
         screenOptions={{
             header: () => (
                 <Header>
-                    <Title>Favtoon</Title>
+                    <Title style={[{marginTop: 20,}]}>Favtoon</Title>
                 </Header>
             ),
             tabBarStyle: {
-                borderTopWidth: 0,
-                paddingVertical: 0,
+                backgroundColor: '#007AFF'
             },
+            tabBarInactiveTintColor: '#000000',
+            tabBarActiveTintColor: '#FFFFFF',
             tabBarLabelStyle: {
                 fontSize: 20,
-                paddingVertical: 0,
-                marginTop: 0,
-            },
-            tabBarIconStyle: {
-                margin: 0,
-                padding: 0,
+                bottom: 10,
             },
             tabBarIcon: () => null
         }}

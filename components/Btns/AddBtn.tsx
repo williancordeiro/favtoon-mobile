@@ -11,7 +11,7 @@ export default function AddBtn(props: TouchableOpacityProps) {
 
 const styles = StyleSheet.create({
     btn: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#0CCB1F',
         width: 60,
         height: 60,
         alignItems: 'center',

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, TouchableNativeFeedback, Keyboard } from 'react-native'
 import React, { useState } from 'react'
 import ProfileInput from '../ProfileInput';
 import TextArea from '../Inputs/TextArea';
@@ -18,30 +18,34 @@ export default function ProfilePage() {
   //console.log(userName +'\n'+ userId +'\n'+ userPassword)
   
   return (
-    <View style={styles.container}>
-      <ScrollView>
-        <Title style={[{color: '#007AFF', textAlign: 'center', marginVertical: 20, fontSize: 34}]}>Profile</Title>
-        <View style={styles.icon}>
-          <UserIcon source={require('@/assets/images/default-icon.png')} />
-          <TouchableOpacity style={styles.addImage}>
-            <Text style={styles.addImageTxt}>+</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.userDetail}>
-            <View >
-              <ProfileInput placeholder='Username. . .' value={userName} onChangeText={setUserName} />
-              <ProfileInput placeholder='@' value={userId} onChangeText={setUserId} />
-              <ProfileInput placeholder='• • • • • •' value={userPassword} onChangeText={setUserPass} secureTextEntry={true} />
-              <TextArea placeholder='Bibliographi. . .' />
-              <TouchableOpacity style={styles.exitButton}>
-                <Text style={[{fontSize: 28, color: '#FFFFFF', fontWeight: 'bold'}]}>Exit</Text>
+    <TouchableNativeFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <ScrollView>
+            <Title style={[{color: '#007AFF', textAlign: 'center', marginVertical: 20, fontSize: 34}]}>Profile</Title>
+            <View style={styles.icon}>
+              <UserIcon source={require('@/assets/images/default-icon.png')} />
+              <TouchableOpacity style={styles.addImage}>
+                <Text style={styles.addImageTxt}>+</Text>
               </TouchableOpacity>
             </View>
-        </View>
-        <View>
-        </View>
-      </ScrollView>
-    </View>
+            <View style={styles.userDetail}>
+                <View >
+                  <ProfileInput placeholder='Username. . .' value={userName} onChangeText={setUserName} />
+                  <ProfileInput placeholder='@' value={userId} onChangeText={setUserId} />
+                  <ProfileInput placeholder='• • • • • •' value={userPassword} onChangeText={setUserPass} secureTextEntry={true} />
+                  <TextArea placeholder='Bibliographi. . .' multiline={true} numberOfLines={4} />
+                  <TouchableOpacity style={styles.exitButton}>
+                    <Text style={[{fontSize: 28, color: '#FFFFFF', fontWeight: 'bold'}]}>Exit</Text>
+                  </TouchableOpacity>
+                </View>
+            </View>
+            <View>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </TouchableNativeFeedback>
   )
 }
 
@@ -50,6 +54,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        fontFamily: 'Roboto'
     },
     icon: {
       alignItems: 'center',
