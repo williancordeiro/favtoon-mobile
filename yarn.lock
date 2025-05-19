@@ -1372,6 +1372,11 @@
   dependencies:
     "@radix-ui/react-compose-refs" "1.1.2"
 
+"@react-native-picker/picker@^2.11.0":
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.11.0.tgz#4587fbce6a382adedad74311e96ee10bb2b2d63a"
+  integrity sha512-QuZU6gbxmOID5zZgd/H90NgBnbJ3VV6qVzp6c7/dDrmWdX8S0X5YFYgDcQFjE3dRen9wB9FWnj2VVdPU64adSg==
+
 "@react-native/assets-registry@0.79.2":
   version "0.79.2"
   resolved "https://registry.yarnpkg.com/@react-native/assets-registry/-/assets-registry-0.79.2.tgz#731963e664c8543f5b277e56c058bde612b69f50"
@@ -2833,6 +2838,18 @@ expo-font@~13.3.1:
   integrity sha512-d+xrHYvSM9WB42wj8vP9OOFWyxed5R1evphfDb6zYBmC1dA9Hf89FpT7TNFtj2Bk3clTnpmVqQTCYbbA2P3CLg==
   dependencies:
     fontfaceobserver "^2.1.0"
+
+expo-image-loader@~5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-5.1.0.tgz#f7d65f9b9a9714eaaf5d50a406cb34cb25262153"
+  integrity sha512-sEBx3zDQIODWbB5JwzE7ZL5FJD+DK3LVLWBVJy6VzsqIA6nDEnSFnsnWyCfCTSvbGigMATs1lgkC2nz3Jpve1Q==
+
+expo-image-picker@^16.1.4:
+  version "16.1.4"
+  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-16.1.4.tgz#d4ac2d1f64f6ec9347c3f64f8435b40e6e4dcc40"
+  integrity sha512-bTmmxtw1AohUT+HxEBn2vYwdeOrj1CLpMXKjvi9FKSoSbpcarT4xxI0z7YyGwDGHbrJqyyic3I9TTdP2J2b4YA==
+  dependencies:
+    expo-image-loader "~5.1.0"
 
 expo-keep-awake@~14.1.4:
   version "14.1.4"

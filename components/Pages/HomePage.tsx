@@ -17,6 +17,7 @@ export default function HomePage() {
             <Search placeholder='Search. . .' placeholderTextColor='grey'></Search>
         </View>
         <View style={styles.main}>
+            
             <View style={styles.btn}>
                 <AddBtn onPress={addSerie} />
             </View>
