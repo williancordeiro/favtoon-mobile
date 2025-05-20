@@ -1,12 +1,6 @@
-import { View, Text, StatusBar } from 'react-native'
+import { Redirect } from 'expo-router'
 import React from 'react'
-import { Tabs } from 'expo-router'
 
-export default function Home() {
-  return (
-    <View>
-        <StatusBar barStyle={'light-content'} />
-        <Tabs.Screen options={{title: 'Home'}} />
-    </View>
-  )
+export default function RedirectLink() {
+    return  <Redirect href="./(tabs)/" />
 }

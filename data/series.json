@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "Invincible",
+    "image": "1",
+    "year": 2021,
+    "genre": "Action, Superhero, Animation",
+    "n season": 3,
+    "synopsis": "Mark Grayson is a seemingly normal teenager, except for the fact that his father is Omni-Man, the most powerful superhero on the planet. When Mark develops his own powers, he begins training with his father but soon discovers that his father's legacy may not be as heroic as it seems. The series explores moral dilemmas of heroism, extreme violence, and coming of age in a superpowered world."
+  },
+  {
+    "id": 2,
+    "title": "Adventure Time",
+    "image": "2",
+    "year": 2010,
+    "genre": "Fantasy, Adventure, Comedy",
+    "n season": 10,
+    "synopsis": "Follow the adventures of Finn, a brave boy, and his best friend Jake, a magical dog with stretchy powers, in the post-apocalyptic and magical Land of Ooo. The series blends surreal humor, emotional and philosophical themes, with creative storytelling and unique characters, exploring friendship, growth, and redemption throughout its seasons."
+  },
+  {
+    "id": 3,
+    "title": "Fullmetal Alchemist: Brotherhood",
+    "image": "3",
+    "year": 2009,
+    "genre": "Action, Fantasy, Drama",
+    "n season": 5,
+    "synopsis": "After a failed attempt to bring their mother back to life using alchemy, brothers Edward and Alphonse Elric embark on a journey in search of the Philosopher's Stone to restore their bodies. The series delves into themes such as sacrifice, power, ethics, and human nature, with intense battles and a rich, engaging storyline."
+  },
+  {
+    "id": 4,
+    "title": "Justice League",
+    "image": "4",
+    "year": 2001,
+    "genre": "Action, Superhero, Animation",
+    "n season": 2,
+    "synopsis": "Earth’s greatest heroes—Superman, Batman, Wonder Woman, Flash, Green Lantern, Martian Manhunter, and Hawkgirl—join forces to protect the planet from threats no single hero could face alone. The series is known for mature storylines, complex villains, and strong character development, standing as a landmark in DC animated storytelling."
+  },
+  {
+    "id": 5,
+    "title": "Avatar: The Last Airbender",
+    "image": "5",
+    "year": 2005,
+    "genre": "Fantasy, Adventure, Animation",
+    "n season": 3,
+    "synopsis": "In a world divided by the Four Nations, young Aang is the Avatar, the only one capable of bending all elements and restoring balance. After being frozen for a hundred years, he awakens to find the Fire Nation waging war. With his friends, Aang embarks on a journey of self-discovery, responsibility, and the fight to save the world."
+  },
+  {
+    "id": 6,
+    "title": "Frieren: Beyond Journey’s End",
+    "image": "6",
+    "year": 2023,
+    "genre": "Fantasy, Drama, Adventure",
+    "n season": 1,
+    "synopsis": "After defeating the Demon King alongside her companions, the elven mage Frieren continues living while her human friends grow old and pass away. Decades later, she sets off on a new journey to better understand human emotions and the meaning of life. The series is a reflective, emotional tale about grief, memory, and personal growth."
+  }
+]
