@@ -2,7 +2,7 @@
   {
     "id": 1,
     "title": "Invincible",
-    "image": "serie1",
+    "image": "1",
     "year": 2021,
     "genre": "Action, Superhero, Animation",
     "n season": 3,
@@ -11,7 +11,7 @@
   {
     "id": 2,
     "title": "Adventure Time",
-    "image": "serie2",
+    "image": "2",
     "year": 2010,
     "genre": "Fantasy, Adventure, Comedy",
     "n season": 10,
@@ -20,7 +20,7 @@
   {
     "id": 3,
     "title": "Fullmetal Alchemist: Brotherhood",
-    "image": "serie3",
+    "image": "3",
     "year": 2009,
     "genre": "Action, Fantasy, Drama",
     "n season": 5,
@@ -29,7 +29,7 @@
   {
     "id": 4,
     "title": "Justice League",
-    "image": "serie4",
+    "image": "4",
     "year": 2001,
     "genre": "Action, Superhero, Animation",
     "n season": 2,
@@ -38,7 +38,7 @@
   {
     "id": 5,
     "title": "Avatar: The Last Airbender",
-    "image": "serie5",
+    "image": "5",
     "year": 2005,
     "genre": "Fantasy, Adventure, Animation",
     "n season": 3,
@@ -47,7 +47,7 @@
   {
     "id": 6,
     "title": "Frieren: Beyond Journey’s End",
-    "image": "serie6",
+    "image": "6",
     "year": 2023,
     "genre": "Fantasy, Drama, Adventure",
     "n season": 1,

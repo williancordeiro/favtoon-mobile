@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-import Input from './Inputs/Input'
-import EditBtn from './Btns/EditBtn'
+import Input from '../Inputs/Input'
+import EditBtn from '../Btns/EditBtn'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 type ProfileInputProps = {

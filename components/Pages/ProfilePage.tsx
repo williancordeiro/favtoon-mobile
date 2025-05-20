@@ -1,9 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, TouchableNativeFeedback, Keyboard } from 'react-native'
 import React, { useState } from 'react'
-import ProfileInput from '../ProfileInput';
+import ProfileInput from '../templates/ProfileInput';
 import TextArea from '../Inputs/TextArea';
-import UserIcon from '../UserIcon';
-import Title from '../Title';
+import UserIcon from '../templates/UserIcon';
+import Title from '../templates/Title';
+import * as ImagePicker from 'expo-image-picker'
 
 const generateRandomUserId = (length: number) => {
   return Math.random().toString(36).substr(2, length);
@@ -12,9 +13,35 @@ const generateRandomUserId = (length: number) => {
 const id = generateRandomUserId(8);
 
 export default function ProfilePage() {
+  const [icon, setIcon] = useState(require('@/assets/images/default-icon.png'))
   const [userName, setUserName] = useState('')
   const [userId, setUserId] = useState('@'+ id)
   const [userPassword, setUserPass] = useState('')
+
+  const permission = async () => {
+          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (status !== 'granted') {
+              alert('Sorry, but we need permission for upload image!');
+              return false
+          }
+          return true;
+      }
+  
+      const selectImage = async () => {
+          const permissionGranted = await permission();
+          if (!permissionGranted) return;
+  
+          let result = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Images,
+              allowsEditing: true,
+              aspect: [1, 1],
+              quality: 1,
+          });
+  
+          if(!result.canceled) {
+              setIcon({ uri: result.assets[0].uri });
+          }
+      }
   //console.log(userName +'\n'+ userId +'\n'+ userPassword)
   
   return (
@@ -24,8 +51,8 @@ export default function ProfilePage() {
           <ScrollView>
             <Title style={[{color: '#007AFF', textAlign: 'center', marginVertical: 20, fontSize: 34}]}>Profile</Title>
             <View style={styles.icon}>
-              <UserIcon source={require('@/assets/images/default-icon.png')} />
-              <TouchableOpacity style={styles.addImage}>
+              <UserIcon source={icon} />
+              <TouchableOpacity style={styles.addImage} onPress={selectImage}>
                 <Text style={styles.addImageTxt}>+</Text>
               </TouchableOpacity>
             </View>
@@ -34,7 +61,7 @@ export default function ProfilePage() {
                   <ProfileInput placeholder='Username. . .' value={userName} onChangeText={setUserName} />
                   <ProfileInput placeholder='@' value={userId} onChangeText={setUserId} />
                   <ProfileInput placeholder='• • • • • •' value={userPassword} onChangeText={setUserPass} secureTextEntry={true} />
-                  <TextArea placeholder='Bibliographi. . .' multiline={true} numberOfLines={4} />
+                  <TextArea placeholder='Bibliographi. . .' placeholderTextColor={'grey'} multiline={true} numberOfLines={4} />
                   <TouchableOpacity style={styles.exitButton}>
                     <Text style={[{fontSize: 28, color: '#FFFFFF', fontWeight: 'bold'}]}>Exit</Text>
                   </TouchableOpacity>

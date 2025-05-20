@@ -1,16 +1,18 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
-import Title from '../Title';
-import FormSerieAdd from '../FormSerieAdd';
+import Title from '../templates/Title';
+import FormSerieAdd from '../templates/FormSerieAdd';
 
 export default function AddSerie() {
   return (
-    <View style={styles.container}>
-      <Title style={styles.title}>Add Serie</Title>
-      <View style={styles.formContainer}>
-          <FormSerieAdd />
+    <ScrollView>
+      <View style={styles.container}>
+        <Title style={styles.title}>Add Serie</Title>
+        <View style={styles.formContainer}>
+            <FormSerieAdd />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -25,7 +27,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#007AFF',
-    marginVertical: 25,
+    marginTop: 120,
+    marginBottom: 20,
     fontSize: 36,
   },
   formContainer: {

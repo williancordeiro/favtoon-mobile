@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { Tabs } from 'expo-router'
-import Header from '@/components/Header';
-import Title from '@/components/Title';
+import Header from '@/components/templates/Header';
+import Title from '@/components/templates/Title';
 
 export default function _layout() {
     return <Tabs 

@@ -1,22 +1,26 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
 import Search from '../Inputs/Search'
 import AddBtn from '../Btns/AddBtn';
-import { useRouter } from 'expo-router';
-import series from '@/data/series.json';
-import SerieBtn from '../SerieBtn';
+import { useFocusEffect, useRouter } from 'expo-router';
+//import series from '@/data/series.json';
+import SerieBtn from '../templates/SerieBtn';
+//import { imageMap } from '@/data/ImageMap';
+import axios from 'axios';
+import { IP } from '@/data/adress';
 
-const imageMap: Record<string, any> = {
-    serie1: require('../../public/images/serie1.png'),
-    serie2: require('../../public/images/serie2.png'),
-    serie3: require('../../public/images/serie3.png'),
-    serie4: require('../../public/images/serie4.png'),
-    serie5: require('../../public/images/serie5.png'),
-    serie6: require('../../public/images/serie6.png'),
+
+type Serie = {
+    id: string | number;
+    title: string;
+    image: string;
 }
 
 export default function HomePage() {
     const router = useRouter();
+    const [series, setSeries] = useState<Serie[]>([]);
+    const [loading, setLoading] = useState(true)
+    const [query, setQuery] = useState('');
 
     const addSerie = () => {
         router.navigate('/(stack)/add');
@@ -29,10 +33,65 @@ export default function HomePage() {
         })
     }
 
+    /*useEffect(() => {
+        const fetchSearch = async () => {
+            try {
+                const response = await fetch(`http://${IP}:3001/series?title_like=${query}`);
+                const result = await response.json();
+                setSeries(result);
+            } catch (error) {
+                console.log('Erro ao buscar serie:\n', error);
+            }
+        }
+
+        const timeOut = setTimeout(() => {
+            if (query)
+                fetchSearch();
+            else
+                setSeries([]);
+        }, 500);
+
+        return () => clearTimeout(timeOut);
+    }, [query]);*/
+
+    useFocusEffect(
+        useCallback(() => {
+        const fetchSeries = async () => {
+            try {
+                const response = await axios.get(`http://${IP}:3001/series`);
+                setSeries(response.data);
+            } catch (error) {
+                console.log('Erro ao buscar series no JSON server\n', error);
+                console.log(IP)
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+            fetchSeries();
+        }, [])
+    )
+
+    if (loading) {
+        return (
+            <View>
+                <ActivityIndicator size='large' color='#0000FF' />
+            </View>
+        )
+    }
+
+    if (!series) {
+        return (
+            <View style={[{flex: 1}]}>
+                <Text>Not Found</Text>
+            </View>
+        )
+    }
+
   return (
     <View style={styles.container}>
         <View style={styles.searchBar}>
-            <Search placeholder='Search. . .' placeholderTextColor='grey'></Search>
+            <Search style={[{}]} placeholder='Search. . .' placeholderTextColor='grey' value={query} onChangeText={setQuery}></Search>
         </View>
         <View style={styles.btn}>
             <AddBtn onPress={addSerie} />
@@ -44,7 +103,7 @@ export default function HomePage() {
                 renderItem={({ item }) => {
                     return (
                         <SerieBtn 
-                            image={imageMap[item.image]}
+                            image={{ uri: item.image }}
                             title={item.title}
                             onPress={() => handlePress({id: item.id.toString(), title: item.title})}
                         />
