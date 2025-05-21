@@ -47,9 +47,9 @@ export default function ProfilePage() {
   return (
     <TouchableNativeFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
+        <Title style={[{color: '#007AFF', textAlign: 'center', paddingTop: '20%', fontSize: 34}]}>Profile</Title>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <ScrollView>
-            <Title style={[{color: '#007AFF', textAlign: 'center', marginVertical: 20, fontSize: 34}]}>Profile</Title>
             <View style={styles.icon}>
               <UserIcon source={icon} />
               <TouchableOpacity style={styles.addImage} onPress={selectImage}>
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     exitButton: {
       backgroundColor: 'red',
       marginTop: 12,
+      marginBottom: '50%',
       borderRadius: 9,
       paddingVertical: 12,
       textAlign: 'center',

@@ -1,4 +1,4 @@
-import { View, Text, Image, ImageSourcePropType, StyleSheet, TextInput, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, Image, ImageSourcePropType, StyleSheet, TextInput, ScrollView, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useActionSheet } from '@expo/react-native-action-sheet'
 import axios from 'axios';
@@ -99,42 +99,48 @@ export default function SerieDetails({ image, title, year, genre, season, synops
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <Image style={styles.image} source={image} />
-        <View style={styles.main}>
-          <View style={styles.detailGroup}>
-            <Text style={styles.title}>Title:</Text>
-            <TextInput style={styles.text} value={newTitle} onChangeText={setNewTitle} editable={editing} />
+      <KeyboardAvoidingView 
+                  style={[{flex: 1,}]} 
+                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+                  keyboardVerticalOffset={80} 
+      >
+        <ScrollView>
+          <Image style={styles.image} source={image} />
+          <View style={styles.main}>
+            <View style={styles.detailGroup}>
+              <Text style={styles.title}>Title:</Text>
+              <TextInput style={styles.text} value={newTitle} onChangeText={setNewTitle} editable={editing} />
+            </View>
+            <View style={styles.detailGroup}>
+              <Text style={styles.title}>Year:</Text>
+              <TextInput style={styles.text} value={newYear} onChangeText={setNewYear} editable={editing} />
+            </View>
+            <View style={styles.detailGroup}>
+              <Text style={styles.title}>Genre:</Text>
+              <TextInput style={styles.text} value={newGenre} onChangeText={setNewGenre} editable={editing} />
+            </View>
+            <View style={styles.detailGroup}>
+              <Text style={styles.title}>N° of Seasons:</Text>
+              <TextInput style={styles.text} value={newSeason} onChangeText={setNewSeason} editable={editing} />
+            </View>
+            <View style={styles.detailGroup}>
+              <Text style={styles.title} >Synopsis:</Text>
+              <TextInput style={styles.textArea} multiline={true} numberOfLines={14} value={newSynopsis} onChangeText={setNewSynopsis} editable={editing} />
+            </View>
           </View>
-          <View style={styles.detailGroup}>
-            <Text style={styles.title}>Year:</Text>
-            <TextInput style={styles.text} value={newYear} onChangeText={setNewYear} editable={editing} />
+          <View style={styles.btn}>
+            {editing ? (
+              <TouchableOpacity style={styles.btnOptions} onPress={editSerie} >
+                <Text style={styles.btnTxt}>Save</Text>
+              </TouchableOpacity>  
+            ) : (
+            <TouchableOpacity style={styles.btnOptions} onPress={onPress} >
+              <Text style={styles.btnTxt}>Options</Text>
+            </TouchableOpacity>
+            )}
           </View>
-          <View style={styles.detailGroup}>
-            <Text style={styles.title}>Genre:</Text>
-            <TextInput style={styles.text} value={newGenre} onChangeText={setNewGenre} editable={editing} />
-          </View>
-          <View style={styles.detailGroup}>
-            <Text style={styles.title}>N° of Seasons:</Text>
-            <TextInput style={styles.text} value={newSeason} onChangeText={setNewSeason} editable={editing} />
-          </View>
-          <View style={styles.detailGroup}>
-            <Text style={styles.title} >Synopsis:</Text>
-            <TextInput style={styles.textArea} multiline={true} numberOfLines={14} value={newSynopsis} onChangeText={setNewSynopsis} editable={editing} />
-          </View>
-        </View>
-        <View style={styles.btn}>
-          {editing ? (
-            <TouchableOpacity style={styles.btnOptions} onPress={editSerie} >
-              <Text style={styles.btnTxt}>Save</Text>
-            </TouchableOpacity>  
-          ) : (
-          <TouchableOpacity style={styles.btnOptions} onPress={onPress} >
-            <Text style={styles.btnTxt}>Options</Text>
-          </TouchableOpacity>
-          )}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   )
 }

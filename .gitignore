@@ -37,4 +37,5 @@ yarn-error.*
 *.tsbuildinfo
 
 # JSON server
-db1.json
+adress.ts
+db.json
