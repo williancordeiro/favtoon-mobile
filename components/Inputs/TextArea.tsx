@@ -1,11 +1,13 @@
 import { View, Text, TextInput, TextInputProps, StyleSheet } from 'react-native'
 import React from 'react'
+import { useThemeContext } from '../context/ThemeContext';
 
 export default function TextArea(props: TextInputProps) {
+    const { colors } = useThemeContext();
     return (
         <TextInput
             {...props}
-            style={styles.textArea}
+            style={[styles.textArea, {borderColor: colors.primary}]}
         >
             {props.children}
         </TextInput>

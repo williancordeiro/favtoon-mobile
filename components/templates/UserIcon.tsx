@@ -1,11 +1,14 @@
 import { Image, ImageProps, StyleSheet } from 'react-native'
 import React from 'react'
+import { useThemeContext } from '../context/ThemeContext';
 
 export default function UserIcon(props: ImageProps) {
+    const { colors } = useThemeContext();
+
     return (
         <Image
             {...props}
-            style={styles.icon}
+            style={[styles.icon, { borderColor: colors.primary }]}
         />
     )
 }
@@ -17,6 +20,5 @@ const styles = StyleSheet.create({
         height: 160,
         borderWidth: 3,
         borderRadius: '50%',
-        borderColor: '#007AFF'
     }
 });

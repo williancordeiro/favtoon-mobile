@@ -8,6 +8,9 @@ import SerieBtn from '../templates/SerieBtn';
 //import { imageMap } from '@/data/ImageMap';
 import axios from 'axios';
 import { IP } from '@/data/adress';
+import { useThemeContext } from '../context/ThemeContext';
+import { GlobalStyle } from '../Style/GlobalStyle';
+import { pb } from '@/src/services/PocketBase';
 
 
 type Serie = {
@@ -21,6 +24,8 @@ export default function HomePage() {
     const [series, setSeries] = useState<Serie[]>([]);
     const [loading, setLoading] = useState(true)
     const [query, setQuery] = useState('');
+    const { colors } = useThemeContext();
+    const globalStyles = GlobalStyle(colors);
 
     const addSerie = () => {
         router.navigate('/(stack)/add');
@@ -89,7 +94,7 @@ export default function HomePage() {
     }
 
   return (
-    <View style={styles.container}>
+    <View style={[globalStyles.container, styles.container]}>
         <View style={styles.searchBar}>
             <Search style={[{}]} placeholder='Search. . .' placeholderTextColor='grey' value={query} onChangeText={setQuery}></Search>
         </View>
@@ -117,7 +122,6 @@ export default function HomePage() {
 
 const styles = StyleSheet.create({
     container: {
-        fontFamily: 'Roboto',
         margin: 10,
         marginBottom: 60,
     },

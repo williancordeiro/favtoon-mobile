@@ -4,6 +4,8 @@ import * as ImagePicker from 'expo-image-picker'
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { IP } from '@/data/adress';
+import { useThemeContext } from '../context/ThemeContext';
+import { GlobalStyle } from '../Style/GlobalStyle';
 
 export default function FormSerieAdd() {
     const [image, setImage] = useState(require('../../assets/images/default-image.png'));
@@ -13,6 +15,8 @@ export default function FormSerieAdd() {
     const [season, setSeason] = useState('');
     const [synopsis, setSynopsis] = useState('');
     const router = useRouter();
+    const { colors } = useThemeContext();
+    const globalStyles = GlobalStyle(colors);
     const scrollViewRef = useRef<ScrollView>(null);
 
     //data base
@@ -70,49 +74,50 @@ export default function FormSerieAdd() {
             <TouchableNativeFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.form}>               
                     <TouchableOpacity onPress={selectImage}>
-                        <Image source={image} style={styles.image} />
+                        <Image source={image} style={[styles.image, globalStyles.input]} />
                     </TouchableOpacity>
                     <TextInput 
-                        style={styles.inputForm}
+                        style={[styles.inputForm, globalStyles.input]}
                         placeholder='Serie title. . .'
-                        placeholderTextColor={'grey'}
+                        placeholderTextColor={colors.opacity}
                         value={title}
                         onChangeText={setTitle}
                     />
                     <TextInput
                         keyboardType='numeric'
                         maxLength={4} 
-                        style={styles.inputForm}
+                        style={[styles.inputForm, globalStyles.input]}
                         placeholder='2025'
+                        placeholderTextColor={colors.opacity}
                         value={year}
                         onChangeText={setYear}
                     />
                     <TextInput 
-                        style={styles.inputForm}
+                        style={[styles.inputForm, globalStyles.input]}
                         placeholder='Genre. . .'
-                        placeholderTextColor={'grey'}
+                        placeholderTextColor={colors.opacity}
                         value={genre}
                         onChangeText={setGenre}
                     />
                     <TextInput
                         keyboardType='numeric'
                         maxLength={2} 
-                        style={styles.inputForm}
+                        style={[styles.inputForm, globalStyles.input]}
                         placeholder='Nº of seasons'
-                        placeholderTextColor={'grey'}
+                        placeholderTextColor={colors.opacity}
                         value={season}
                         onChangeText={setSeason}
                     />
                     <TextInput 
-                        style={styles.inputFormSinopse}
+                        style={[styles.inputFormSinopse, globalStyles.input]}
                         placeholder='Sinopse. . .'
-                        placeholderTextColor={'grey'}
+                        placeholderTextColor={colors.opacity}
                         value={synopsis}
                         onChangeText={setSynopsis}
                         multiline={true}
                         numberOfLines={6}
                     />
-                    <TouchableOpacity style={styles.buttonForm} onPress={handleSave} >
+                    <TouchableOpacity style={[styles.buttonForm, globalStyles.btn]} onPress={handleSave} >
                         <Text style={[{color: '#FFFFFF', fontSize: 21, fontWeight: 'bold'}]}>Salvar</Text>
                     </TouchableOpacity>
                 </View>
@@ -134,7 +139,6 @@ const styles = StyleSheet.create({
     },
     inputForm: {
         width: '100%',
-        borderColor: '#007AFF',
         borderWidth: 3,
         borderRadius: 9,
         fontSize: 21,
@@ -144,7 +148,6 @@ const styles = StyleSheet.create({
     },
     inputFormSinopse: {
         width: '100%',
-        borderColor: '#007AFF',
         borderWidth: 3,
         borderRadius: 9,
         fontSize: 21,
@@ -155,7 +158,6 @@ const styles = StyleSheet.create({
     },
     buttonForm: {
         width: '100%',
-        backgroundColor: '#007AFF',
         borderRadius: 9,
         paddingVertical: 12,
         justifyContent: 'center',
@@ -176,7 +178,7 @@ const styles = StyleSheet.create({
     image: {
         borderWidth: 3,
         borderRadius: 9,
-        borderColor: '#007AFF',
+
         width: 320,
         height: 160,
         marginBottom: 9,

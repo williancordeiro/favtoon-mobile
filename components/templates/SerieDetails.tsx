@@ -4,6 +4,8 @@ import { useActionSheet } from '@expo/react-native-action-sheet'
 import axios from 'axios';
 import { IP } from '@/data/adress';
 import { router } from 'expo-router';
+import { useThemeContext } from '../context/ThemeContext';
+import { GlobalStyle } from '../Style/GlobalStyle';
 
 type SerieDetailsProps = {
     image: ImageSourcePropType;
@@ -25,6 +27,8 @@ export default function SerieDetails({ image, title, year, genre, season, synops
   const [newGenre, setNewGenre] = useState(genre);
   const [newSeason, setNewSeason] = useState(season.toString());
   const [newSynopsis, setNewSynopsis] = useState(synopsis);
+  const { colors } = useThemeContext();
+  const globalStyles = GlobalStyle(colors);
 
   const editSerie = async () => {
     try {
@@ -108,23 +112,23 @@ export default function SerieDetails({ image, title, year, genre, season, synops
           <Image style={styles.image} source={image} />
           <View style={styles.main}>
             <View style={styles.detailGroup}>
-              <Text style={styles.title}>Title:</Text>
+              <Text style={[globalStyles.title, styles.title]}>Title:</Text>
               <TextInput style={styles.text} value={newTitle} onChangeText={setNewTitle} editable={editing} />
             </View>
             <View style={styles.detailGroup}>
-              <Text style={styles.title}>Year:</Text>
+              <Text style={[globalStyles.title, styles.title]}>Year:</Text>
               <TextInput style={styles.text} value={newYear} onChangeText={setNewYear} editable={editing} />
             </View>
             <View style={styles.detailGroup}>
-              <Text style={styles.title}>Genre:</Text>
+              <Text style={[globalStyles.title, styles.title]}>Genre:</Text>
               <TextInput style={styles.text} value={newGenre} onChangeText={setNewGenre} editable={editing} />
             </View>
             <View style={styles.detailGroup}>
-              <Text style={styles.title}>N° of Seasons:</Text>
+              <Text style={[globalStyles.title, styles.title]}>N° of Seasons:</Text>
               <TextInput style={styles.text} value={newSeason} onChangeText={setNewSeason} editable={editing} />
             </View>
             <View style={styles.detailGroup}>
-              <Text style={styles.title} >Synopsis:</Text>
+              <Text style={[globalStyles.title, styles.title]} >Synopsis:</Text>
               <TextInput style={styles.textArea} multiline={true} numberOfLines={14} value={newSynopsis} onChangeText={setNewSynopsis} editable={editing} />
             </View>
           </View>
@@ -166,9 +170,7 @@ const styles = StyleSheet.create({
     },
     title: {
       marginStart: 9,
-      color: '#007AFF',
       fontSize: 18,
-      fontWeight: 'bold',
       textAlign: 'left',
     },
     text: {

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Input from '../Inputs/Input'
 import EditBtn from '../Btns/EditBtn'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useThemeContext } from '../context/ThemeContext';
 
 type ProfileInputProps = {
     placeholder: string,
@@ -15,6 +16,7 @@ type ProfileInputProps = {
 export default function ProfileInput({ placeholder, value, onChangeText, secureTextEntry }: ProfileInputProps) {
     const [campEdit, setCampEdit] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
+    const { colors } = useThemeContext();
 
     const focusTrue = () => {
         setIsFocused(true);
@@ -30,9 +32,9 @@ export default function ProfileInput({ placeholder, value, onChangeText, secureT
     }
 
     return (
-    <View style={styles.container}>
+    <View style={[styles.container, {borderColor: colors.primary}]}>
         <Input 
-            style={[styles.input, {color: isFocused ? 'black' : 'grey'}]} 
+            style={[styles.input, {color: isFocused ? colors.text : colors.opacity}]} 
             placeholderTextColor={'#D1D1D6'}
             editable={campEdit}
             onFocus={focusTrue}
@@ -44,12 +46,12 @@ export default function ProfileInput({ placeholder, value, onChangeText, secureT
         >
 
         </Input>
-        <View style={styles.divider}></View>
+        <View style={[styles.divider, {borderColor: colors.primary}]}></View>
         <EditBtn 
             style={styles.btn}
             onPress={handlePress}
         >
-            <FontAwesome name="pencil" size={26} color="#007AFF" />
+            <FontAwesome name="pencil" size={26} style={[{color: colors.primary}]} />
         </EditBtn>
     </View>
   )
@@ -61,7 +63,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderWidth: 3,
         borderRadius: 9,
-        borderColor: '#007AFF',
         marginBottom: 9,
     },
     input: {

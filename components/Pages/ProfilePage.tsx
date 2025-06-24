@@ -4,7 +4,11 @@ import ProfileInput from '../templates/ProfileInput';
 import TextArea from '../Inputs/TextArea';
 import UserIcon from '../templates/UserIcon';
 import Title from '../templates/Title';
-import * as ImagePicker from 'expo-image-picker'
+import * as ImagePicker from 'expo-image-picker';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useThemeContext } from '../context/ThemeContext';
+import { GlobalStyle } from '../Style/GlobalStyle';
+import { router } from 'expo-router';
 
 const generateRandomUserId = (length: number) => {
   return Math.random().toString(36).substr(2, length);
@@ -13,10 +17,12 @@ const generateRandomUserId = (length: number) => {
 const id = generateRandomUserId(8);
 
 export default function ProfilePage() {
-  const [icon, setIcon] = useState(require('@/assets/images/default-icon.png'))
-  const [userName, setUserName] = useState('')
-  const [userId, setUserId] = useState('@'+ id)
-  const [userPassword, setUserPass] = useState('')
+  const [icon, setIcon] = useState(require('@/assets/images/default-icon.png'));
+  const [userName, setUserName] = useState('');
+  const [userId, setUserId] = useState('@'+ id);
+  const [userPassword, setUserPass] = useState('');
+  const { colors } = useThemeContext();
+  const globalStyles = GlobalStyle(colors);
 
   const permission = async () => {
           const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -42,17 +48,30 @@ export default function ProfilePage() {
               setIcon({ uri: result.assets[0].uri });
           }
       }
+
+      const SettingsPage = () => {
+        router.push('/settings');
+      }
   //console.log(userName +'\n'+ userId +'\n'+ userPassword)
   
   return (
     <TouchableNativeFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        <Title style={[{color: '#007AFF', textAlign: 'center', paddingTop: '20%', fontSize: 34}]}>Profile</Title>
+        <TouchableOpacity 
+          style={[{
+            marginTop: '19%',
+            alignItems: 'flex-end'
+          }]}
+          onPress={SettingsPage}
+        >
+          <Ionicons name="settings-outline" size={32} style={[{color: colors.opacity}]}/>
+        </TouchableOpacity>
+        <Title style={[{color: colors.primary, textAlign: 'center', fontSize: 34}]}>Profile</Title>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <ScrollView>
             <View style={styles.icon}>
               <UserIcon source={icon} />
-              <TouchableOpacity style={styles.addImage} onPress={selectImage}>
+              <TouchableOpacity style={[styles.addImage, {backgroundColor: colors.success}]} onPress={selectImage}>
                 <Text style={styles.addImageTxt}>+</Text>
               </TouchableOpacity>
             </View>
@@ -62,7 +81,7 @@ export default function ProfilePage() {
                   <ProfileInput placeholder='@' value={userId} onChangeText={setUserId} />
                   <ProfileInput placeholder='• • • • • •' value={userPassword} onChangeText={setUserPass} secureTextEntry={true} />
                   <TextArea placeholder='Bibliographi. . .' placeholderTextColor={'grey'} multiline={true} numberOfLines={4} />
-                  <TouchableOpacity style={styles.exitButton}>
+                  <TouchableOpacity style={[styles.exitButton, {backgroundColor: colors.danger}]}>
                     <Text style={[{fontSize: 28, color: '#FFFFFF', fontWeight: 'bold'}]}>Exit</Text>
                   </TouchableOpacity>
                 </View>
@@ -91,7 +110,6 @@ const styles = StyleSheet.create({
 
     },
     addImage: {
-      backgroundColor: '#0CCB1F',
       position: 'relative',
       bottom: 70,
       left: 30,
@@ -107,9 +125,8 @@ const styles = StyleSheet.create({
       lineHeight: 18,
     },
     exitButton: {
-      backgroundColor: 'red',
       marginTop: 12,
-      marginBottom: '50%',
+      marginBottom: '60%',
       borderRadius: 9,
       paddingVertical: 12,
       textAlign: 'center',

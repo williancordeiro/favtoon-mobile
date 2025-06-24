@@ -1,3 +1,13 @@
 {
-    "series": []
+  "series": [
+    {
+      "id": "696c",
+      "title": "Teste",
+      "year": "2025",
+      "genre": "Testando",
+      "season": "1",
+      "synopsis": "Testando Temas de cores",
+      "image": "file:///var/mobile/Containers/Data/Application/45247876-572C-4FBE-963F-BE330A9D185F/Library/Caches/ExponentExperienceData/@anonymous/favtoon-mobile-7938569e-6f75-4aff-9884-e8e4158a5c58/ImagePicker/BFCAFFC5-A044-46C8-A52E-890A024C10A3.jpg"
+    }
+  ]
 }
