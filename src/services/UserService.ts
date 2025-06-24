@@ -1,4 +1,4 @@
-import { pb } from './PocketBase';
+import { pb } from './PocketBase'
 
 export default function UserService() {
     

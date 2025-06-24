@@ -10,7 +10,6 @@ import axios from 'axios';
 import { IP } from '@/data/adress';
 import { useThemeContext } from '../context/ThemeContext';
 import { GlobalStyle } from '../Style/GlobalStyle';
-import { pb } from '@/src/services/PocketBase';
 
 
 type Serie = {
