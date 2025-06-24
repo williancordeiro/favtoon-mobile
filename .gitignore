@@ -39,3 +39,5 @@ yarn-error.*
 # JSON server
 adress.ts
 db.json
+
+PocketBase.ts
