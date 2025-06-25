@@ -37,10 +37,24 @@ export default function UserService() {
         }
     }
 
+    const updateUserImage = async (userId: string, imageFile: File) => {
+        try {
+            const formData = new FormData();
+            formData.append('image', imageFile);
+
+            const response = await pb.collection('users').update(userId, formData);
+            return response;
+        } catch (error) {
+            console.error('Error updating user image:', error);
+            throw error;
+        }
+    }
+
     return {
         createUser,
         login,
-        logout
+        logout,
+        updateUserImage
     }
 
 }
