@@ -28,7 +28,7 @@ export default function FormLogin() {
         }
 
         const randomUsername = Math.floor(Math.random() * 1000000);
-        const username = `${name.toLowerCase()}${randomUsername.toString().padStart(6, '0')}`;
+        const username = `@${name.toLowerCase()}${randomUsername.toString().padStart(6, '0')}`;
 
        service.createUser(email, password, confirmPassword, name, username)
            .then(() => {

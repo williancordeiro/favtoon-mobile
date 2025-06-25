@@ -19,6 +19,26 @@ export default function UserService() {
         }
     }
 
+    const getCurrentUser = () => {
+        const user = pb.authStore.model;
+        if (!user) {
+            throw new Error('No user is currently logged in');
+        }
+        return user;
+    }
+
+    const updateUser = async (userId: string, data: Record<string, any>) => {
+        try {
+            const updatedUser = await pb.collection('users').update(userId, data);
+            pb.authStore.save(pb.authStore.token, updatedUser);
+            await AsyncStorage.setItem('user_model', JSON.stringify(updatedUser));
+            return updatedUser;
+        } catch (error) {
+            console.error('Error updating user:', error);
+            throw error;
+        }
+    }
+
     const login = async (email: string, password: string) => {
         try {
             const authData = await pb.collection('users').authWithPassword(email, password);
@@ -52,12 +72,20 @@ export default function UserService() {
         }
     }
 
-    const updateUserImage = async (userId: string, imageFile: File) => {
+    const updateUserImage = async (userId: string, imageFile: string) => {
         try {
             const formData = new FormData();
-            formData.append('image', imageFile);
+            formData.append('avatar', {
+                uri: imageFile,
+                type: 'image/jpeg',
+                name: 'avatar.jpg'
+            } as any);
 
             const response = await pb.collection('users').update(userId, formData);
+
+            pb.authStore.save(pb.authStore.token, response);
+            await AsyncStorage.setItem('user_model', JSON.stringify(response));
+
             return response;
         } catch (error) {
             console.error('Error updating user image:', error);
@@ -65,11 +93,24 @@ export default function UserService() {
         }
     }
 
+    const updateUserBio = async (userId: string, bio: string) => {
+        try {
+            const response = await pb.collection('users').update(userId, { bio });
+            return response;
+        } catch (error) {
+            console.error('Error updating user bio:', error);
+            throw error;
+        }
+    }
+
     return {
         createUser,
+        getCurrentUser,
+        updateUser,
         login,
         logout,
         updateUserImage,
+        updateUserBio,
         restoreSession
     }
 
