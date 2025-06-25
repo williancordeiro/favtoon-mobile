@@ -1,12 +1,14 @@
 import { pb } from './PocketBase'
 
 export default function UserService() {
-    
-    const createUser = async (email: string, password: string, username: string) => {
+
+    const createUser = async (email: string, password: string, passwordConfirm: string, name: string, username: string) => {
         try {
             const user = await pb.collection('users').create({
                 email,
                 password,
+                passwordConfirm,
+                name,
                 username
             });
             return user;
@@ -33,6 +35,12 @@ export default function UserService() {
             console.error('Error logging out:', error);
             throw error;
         }
+    }
+
+    return {
+        createUser,
+        login,
+        logout
     }
 
 }
