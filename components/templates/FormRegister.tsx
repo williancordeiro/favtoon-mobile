@@ -2,7 +2,8 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import React, { useState } from 'react'
 import { useThemeContext } from '../context/ThemeContext'
 import { GlobalStyle } from '../Style/GlobalStyle';
-import SerieService from '@/src/services/SerieService';
+import UserService from '@/src/services/UserService';
+import { router } from 'expo-router';
 
 export default function FormLogin() {
     const { colors } = useThemeContext();
@@ -12,10 +13,33 @@ export default function FormLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [username, setUsername] = useState('');
-    
+    //const [username, setUsername] = useState('');
+    const service = UserService();
+
     const handleRegister = () => {
-        
+        if (name === '' || email === '' || password === '' || confirmPassword === '') {
+            alert('Please fill all fields');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert('Passwords do not match');
+            return;
+        }
+
+        const randomUsername = Math.floor(Math.random() * 1000000);
+        const username = `${name.toLowerCase()}${randomUsername.toString().padStart(6, '0')}`;
+
+       service.createUser(email, password, confirmPassword, name, username)
+           .then(() => {
+               alert('User registered successfully');
+               router.push('/(tabs)/');
+           })
+           .catch((error: any) => {
+               //alert('Error registering user: ' + JSON.stringify(error?.data || error));
+               alert('Error registering user')
+               console.error('Error registering user:', error);
+           });
     }
 
   return (
@@ -56,6 +80,7 @@ export default function FormLogin() {
 
         <TouchableOpacity
             style={[globalStyles.btn, styles.btn]}
+            onPress={handleRegister}
         >
             <Text style={[{color: colors.withe, fontSize: 24, fontWeight: 'bold'}]}>Register</Text>
         </TouchableOpacity>
