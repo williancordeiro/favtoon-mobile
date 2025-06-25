@@ -1,4 +1,5 @@
 import { pb } from './PocketBase'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function UserService() {
 
@@ -21,6 +22,8 @@ export default function UserService() {
     const login = async (email: string, password: string) => {
         try {
             const authData = await pb.collection('users').authWithPassword(email, password);
+            await AsyncStorage.setItem('user_token', pb.authStore.token);
+            await AsyncStorage.setItem('user_model', JSON.stringify(pb.authStore.model));
             return authData;
         } catch (error) {
             console.error('Error logging in:', error);
@@ -28,9 +31,21 @@ export default function UserService() {
         }
     }
 
+    const restoreSession = async () => {
+        const token = await AsyncStorage.getItem('user_token');
+        const model = await AsyncStorage.getItem('user_model');
+        if (token && model) {
+            pb.authStore.save(token, JSON.parse(model));
+            return true;
+        }
+        return false;
+    }
+
     const logout = async () => {
         try {
             await pb.authStore.clear();
+            await AsyncStorage.removeItem('user_token');
+            await AsyncStorage.removeItem('user_model');
         } catch (error) {
             console.error('Error logging out:', error);
             throw error;
@@ -54,7 +69,8 @@ export default function UserService() {
         createUser,
         login,
         logout,
-        updateUserImage
+        updateUserImage,
+        restoreSession
     }
 
 }

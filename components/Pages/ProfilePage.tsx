@@ -18,9 +18,9 @@ const id = generateRandomUserId(8);
 
 export default function ProfilePage() {
   const [icon, setIcon] = useState(require('@/assets/images/default-icon.png'));
-  const [userName, setUserName] = useState('');
-  const [userId, setUserId] = useState('@'+ id);
-  const [userPassword, setUserPass] = useState('');
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('@'+ id);
+  const [password, setPassword] = useState('');
   const { colors } = useThemeContext();
   const globalStyles = GlobalStyle(colors);
 
@@ -77,9 +77,9 @@ export default function ProfilePage() {
             </View>
             <View style={styles.userDetail}>
                 <View >
-                  <ProfileInput placeholder='Username. . .' value={userName} onChangeText={setUserName} />
-                  <ProfileInput placeholder='@' value={userId} onChangeText={setUserId} />
-                  <ProfileInput placeholder='• • • • • •' value={userPassword} onChangeText={setUserPass} secureTextEntry={true} />
+                  <ProfileInput placeholder='Username. . .' value={name} onChangeText={setName} />
+                  <ProfileInput placeholder='@' value={username} onChangeText={setUsername} />
+                  <ProfileInput placeholder='• • • • • •' value={password} onChangeText={setPassword} secureTextEntry={true} />
                   <TextArea placeholder='Bibliographi. . .' placeholderTextColor={'grey'} multiline={true} numberOfLines={4} />
                   <TouchableOpacity style={[styles.exitButton, {backgroundColor: colors.danger}]}>
                     <Text style={[{fontSize: 28, color: '#FFFFFF', fontWeight: 'bold'}]}>Exit</Text>
