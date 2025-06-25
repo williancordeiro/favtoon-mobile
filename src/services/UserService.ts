@@ -2,11 +2,12 @@ import { pb } from './PocketBase'
 
 export default function UserService() {
     
-    const createUser = async (email: string, password: string, username: string) => {
+    const createUser = async (email: string, password: string, name: string, username: string) => {
         try {
             const user = await pb.collection('users').create({
                 email,
                 password,
+                name,
                 username
             });
             return user;

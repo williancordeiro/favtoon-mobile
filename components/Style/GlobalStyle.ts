@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native"
 
 export const lightTheme = {
     primary: '#007AFF',
+    secondary: '#FFFFFF',
     title: '#FFFFFF',
     text: '#000000',
     background: '#FFFFFF',
@@ -9,11 +10,13 @@ export const lightTheme = {
     danger: 'red',
     opacity: '#b5b5b5',
     tabBarInactiveTintColor: '#22222',
-    tabBarActiveTintColor: '#FFFFFF'
+    tabBarActiveTintColor: '#FFFFFF',
+    withe: '#FFFFFF'
 }
 
 export const darkTheme = {
     primary: '#022852',
+    secondary: '#222222',
     title: '#FFFFFF',
     text: '#FFFFFF',
     background: '#111111',
@@ -22,6 +25,7 @@ export const darkTheme = {
     opacity: '#919191',
     tabBarInactiveTintColor: '##333333',
     tabBarActiveTintColor: '#FFFFFF',
+    withe: '#FFFFFF'
 }
 
 export const GlobalStyle = (color: typeof lightTheme) => StyleSheet.create({
@@ -37,6 +41,12 @@ export const GlobalStyle = (color: typeof lightTheme) => StyleSheet.create({
         backgroundColor: color.background,
         height: '100%',
     },
+    main: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '20%'
+    },
     title: {
         color: color.primary,
         fontWeight: 'bold',
@@ -46,6 +56,8 @@ export const GlobalStyle = (color: typeof lightTheme) => StyleSheet.create({
         color: color.text,
     },
     btn: {
-        backgroundColor: color.primary
+        backgroundColor: color.primary,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })
