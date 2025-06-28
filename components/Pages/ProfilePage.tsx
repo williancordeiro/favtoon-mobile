@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, TouchableNativeFeedback, Keyboard } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, TouchableNativeFeedback, Keyboard, TextInput } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import ProfileInput from '../templates/ProfileInput';
 import TextArea from '../Inputs/TextArea';
 import UserIcon from '../templates/UserIcon';
@@ -9,6 +9,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useThemeContext } from '../context/ThemeContext';
 import { GlobalStyle } from '../Style/GlobalStyle';
 import { router } from 'expo-router';
+import UserService from '@/src/services/UserService';
+import { pb } from '@/src/services/PocketBase';
+import Input from '../Inputs/Input';
 
 const generateRandomUserId = (length: number) => {
   return Math.random().toString(36).substr(2, length);
@@ -17,10 +20,29 @@ const generateRandomUserId = (length: number) => {
 const id = generateRandomUserId(8);
 
 export default function ProfilePage() {
-  const [icon, setIcon] = useState(require('@/assets/images/default-icon.png'));
-  const [userName, setUserName] = useState('');
-  const [userId, setUserId] = useState('@'+ id);
-  const [userPassword, setUserPass] = useState('');
+  const [icon, setIcon] = useState<number | { uri: string }>(require('@/assets/images/default-icon.png'));
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('@'+ id);
+  //const [password, setPassword] = useState('');
+  const service = UserService();
+
+  //Input from ProfileInput.tsx
+  const [campEdit, setCampEdit] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const focus = () => {
+    setIsFocused(true);
+  }
+
+  /*const blur = () => {
+    setCampEdit(false);
+    setIsFocused(false);
+  }*/
+
+  const handleEdit = () => {
+    setCampEdit(true);
+  }
+
   const { colors } = useThemeContext();
   const globalStyles = GlobalStyle(colors);
 
@@ -33,30 +55,68 @@ export default function ProfilePage() {
           return true;
       }
   
-      const selectImage = async () => {
-          const permissionGranted = await permission();
-          if (!permissionGranted) return;
-  
-          let result = await ImagePicker.launchImageLibraryAsync({
-              mediaTypes: ImagePicker.MediaTypeOptions.Images,
-              allowsEditing: true,
-              aspect: [1, 1],
-              quality: 1,
-          });
-  
-          if(!result.canceled) {
-              setIcon({ uri: result.assets[0].uri });
-          }
-      }
+  const selectImage = async () => {
+      const permissionGranted = await permission();
+      if (!permissionGranted) return;
 
-      const SettingsPage = () => {
-        router.push('/settings');
+      let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+      });
+
+      if(!result.canceled) {
+        const imageUri = result.assets[0].uri;
+        setIcon({ uri: imageUri });
+
+        try {
+          const user = service.getCurrentUser();
+          await service.updateUserImage(user.id, imageUri);
+          alert('Image updated successfully!');
+          fetchUser();
+        } catch (error) {
+          alert('Failed to update image');
+          console.error('Error updating image:', error);
+        }
       }
-  //console.log(userName +'\n'+ userId +'\n'+ userPassword)
+  }
+
+  const SettingsPage = () => {
+    router.push('/settings');
+  }
+  
+  const fetchUser = async () => {
+    const user = service.getCurrentUser?.();
+    if (user) {
+      setName(user.name || '');
+      setUsername(user.username || '@' + id);
+      if (user.avatar) {
+        const avatarUri = pb.files.getURL(user, user.avatar);
+        setIcon({ uri: avatarUri });
+      }
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await service.logout();
+      router.push('/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      alert('Failed to log out');
+    }
+  }
+
+  useEffect(() => {
+    fetchUser();
+  }, []);  
   
   return (
     <TouchableNativeFeedback onPress={Keyboard.dismiss} accessible={false}>
+
       <View style={styles.container}>
+
         <TouchableOpacity 
           style={[{
             marginTop: '19%',
@@ -64,33 +124,104 @@ export default function ProfilePage() {
           }]}
           onPress={SettingsPage}
         >
+
           <Ionicons name="settings-outline" size={32} style={[{color: colors.opacity}]}/>
+
         </TouchableOpacity>
+
         <Title style={[{color: colors.primary, textAlign: 'center', fontSize: 34}]}>Profile</Title>
+
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+
           <ScrollView>
+
             <View style={styles.icon}>
+
               <UserIcon source={icon} />
+
               <TouchableOpacity style={[styles.addImage, {backgroundColor: colors.success}]} onPress={selectImage}>
                 <Text style={styles.addImageTxt}>+</Text>
               </TouchableOpacity>
+
             </View>
+
             <View style={styles.userDetail}>
+
                 <View >
-                  <ProfileInput placeholder='Username. . .' value={userName} onChangeText={setUserName} />
-                  <ProfileInput placeholder='@' value={userId} onChangeText={setUserId} />
-                  <ProfileInput placeholder='• • • • • •' value={userPassword} onChangeText={setUserPass} secureTextEntry={true} />
-                  <TextArea placeholder='Bibliographi. . .' placeholderTextColor={'grey'} multiline={true} numberOfLines={4} />
-                  <TouchableOpacity style={[styles.exitButton, {backgroundColor: colors.danger}]}>
-                    <Text style={[{fontSize: 28, color: '#FFFFFF', fontWeight: 'bold'}]}>Exit</Text>
-                  </TouchableOpacity>
+                  <ProfileInput 
+                    inputProps={{
+                      placeholder: 'Username. . .',
+                      value: name,
+                      onChangeText: setName,
+                      editable: campEdit,
+                      onFocus: focus,
+                      //onBlur: blur
+                    }} 
+                    btnProps={{
+                      onPress: handleEdit,
+                    }}
+                  />
+
+                  <ProfileInput 
+                    inputProps={{
+                      placeholder: '@',
+                      value: username,
+                      onChangeText: setUsername,
+                      editable: campEdit,
+                      onFocus: focus,                      
+                      //onBlur: blur
+                    }}
+                    btnProps={{
+                      onPress: handleEdit,
+                    }}
+                  />
+
+                  <ProfileInput 
+                    inputProps={{
+                      placeholder: '• • • • • •',
+                      placeholderTextColor: colors.opacity,
+                      editable: false,
+                    }}
+                  />
+
+                  <TextInput 
+                    style={[globalStyles.input, styles.input]}
+                    placeholder='Bio. . .'
+                    placeholderTextColor={colors.opacity}
+                    multiline={true}
+                    numberOfLines={4}
+                  />
+
+                  {campEdit ? (
+                    <TouchableOpacity
+                      style={[styles.exitButton, {backgroundColor: colors.success}]}
+                      //onPress={handleSave}
+                    >
+                      <Text style={{fontSize: 28, color: '#FFF', fontWeight: 'bold'}}>Salvar</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={[styles.exitButton, {backgroundColor: colors.danger}]}
+                      onPress={handleLogout}
+                    >
+                      <Text style={[{fontSize: 28, color: '#FFFFFF', fontWeight: 'bold'}]}>Exit</Text>
+                    </TouchableOpacity>
+                  )}
+                  
                 </View>
+            
             </View>
+            
             <View>
+            
             </View>
+          
           </ScrollView>
+        
         </KeyboardAvoidingView>
+      
       </View>
+    
     </TouchableNativeFeedback>
   )
 }
@@ -101,6 +232,13 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         fontFamily: 'Roboto'
+    },
+    input: {
+      borderWidth: 3,
+      borderRadius: 9,
+      fontSize: 28,
+      paddingStart: 9,
+      paddingVertical: 12,
     },
     icon: {
       alignItems: 'center',

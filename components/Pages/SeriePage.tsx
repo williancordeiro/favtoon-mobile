@@ -2,19 +2,17 @@ import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity } from 'rea
 import React, { useEffect, useState } from 'react'
 import SerieDetails from '../templates/SerieDetails'
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
-//import serie from '@/data/series.json';
-//import { imageMap } from '@/data/ImageMap';
-import axios from 'axios';
-import { IP } from '@/data/adress';
+import SerieService from '@/src/services/SerieService';
+import UserService from '@/src/services/UserService';
 
 type Serie = {
     id: string | number;
     title: string;
     year: number;
     genre: string;
-    season: number;
+    seasons: number;
     synopsis: string;
-    image: string;
+    image: string | null;
 }
 
 type SeriePageProps = {
@@ -22,37 +20,109 @@ type SeriePageProps = {
 }
 
 export default function SeriePage({ id }: SeriePageProps) {
-    //const serie = serie.find((serie) => serie.id.toString() === id);
     const [serie, setSeries] = useState<Serie>();
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const service = SerieService();
+    const userService = UserService();
+
+    const fetchSeries = async () => {
+        if (!id) {
+            setError('Series ID not provided');
+            setLoading(false);
+            return;
+        }
+
+        try {
+            setError(null);
+            
+            const currentUser = userService.getCurrentUser();
+            if (!currentUser) {
+                setError('User not authenticated. Please login again.');
+                setLoading(false);
+                return;
+            }
+            
+            let response;
+            try {
+                response = await service.getSerieByIdWithFilter(id, currentUser.id);
+            } catch (filterError) {
+                response = await service.getSerieById(id);
+            }
+            
+            if (response) {
+                const image = await service.getSerieImage(response);
+                setSeries({
+                    id: response.id,
+                    title: response.title,
+                    year: response.year,
+                    genre: response.genre,
+                    seasons: response.seasons,
+                    synopsis: response.synopsis,
+                    image: image
+                });
+            } else {
+                setError(`Series with ID ${id} not found`);
+            }
+        } catch (error: any) {
+            if (error.status === 403) {
+                setError('Access denied. Check if you have permission to access this series.');
+            } else if (error.status === 401) {
+                setError('Session expired. Please login again.');
+            } else {
+                setError(`Error loading series: ${error.message || 'Unknown error'}`);
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
-        const fetchSeries = async () => {
+        const restoreSession = async () => {
             try {
-                const response = await axios.get(`http://${IP}:3001/series/${id}`);
-                setSeries(response.data);
+                await userService.restoreSession();
             } catch (error) {
-                console.log(`Erro ao buscar serie selecionada pelo id ${id} \n`, error);
-            } finally {
-                setLoading(false);
+                // Handle error silently
             }
         };
+        
+        restoreSession();
+    }, []);
 
+    useEffect(() => {
         fetchSeries();
     }, [id]);
 
     if (loading) {
         return (
-            <View>
+            <View style={[styles.container, styles.centered]}>
                 <ActivityIndicator size='large' color='#0000FF' />
+                <Text style={styles.loadingText}>Loading series...</Text>
+            </View>
+        )
+    }
+
+    if (error) {
+        return (
+            <View style={[styles.container, styles.centered]}>
+                <Text style={styles.errorText}>Error: {error}</Text>
+                <TouchableOpacity 
+                    style={styles.retryButton} 
+                    onPress={() => {
+                        setLoading(true);
+                        fetchSeries();
+                    }}
+                >
+                    <Text style={styles.retryButtonText}>Try again</Text>
+                </TouchableOpacity>
             </View>
         )
     }
 
     if (!serie) {
         return (
-            <View style={[{flex: 1}]}>
-                <Text>Not Found</Text>
+            <View style={[styles.container, styles.centered]}>
+                <Text style={styles.errorText}>Series not found</Text>
             </View>
         )
     }
@@ -60,11 +130,11 @@ export default function SeriePage({ id }: SeriePageProps) {
     return (
         <View style={styles.container}>
             <SerieDetails
-                image={{ uri: serie.image }}
+                image={serie.image ? { uri: serie.image } : require('@/assets/images/default-image.png')}
                 title={serie.title}
                 year={serie.year}
                 genre={serie.genre}
-                season={serie.season}
+                season={serie.seasons}
                 synopsis={serie.synopsis}
                 id={serie.id}
             />
@@ -77,4 +147,32 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20
+    },
+    loadingText: {
+        marginTop: 10,
+        fontSize: 16,
+        color: '#666'
+    },
+    errorText: {
+        fontSize: 16,
+        color: '#d32f2f',
+        textAlign: 'center',
+        marginBottom: 20
+    },
+    retryButton: {
+        backgroundColor: '#0066cc',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 5
+    },
+    retryButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold'
+    }
 });
