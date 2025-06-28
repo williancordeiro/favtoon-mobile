@@ -1,42 +1,84 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView, Platform, TouchableNativeFeedback, Keyboard } from 'react-native'
-import React, { useRef, useState } from 'react'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform, TouchableNativeFeedback, Keyboard } from 'react-native'
+import React, { useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
-import axios from 'axios';
 import { useRouter } from 'expo-router';
-import { IP } from '@/data/adress';
 import { useThemeContext } from '../context/ThemeContext';
 import { GlobalStyle } from '../Style/GlobalStyle';
+import SerieService from '@/src/services/SerieService';
+import UserService from '@/src/services/UserService';
 
 export default function FormSerieAdd() {
     const [image, setImage] = useState(require('../../assets/images/default-image.png'));
     const [title, setTitle] = useState('');
     const [year, setYear] = useState('2025');
     const [genre, setGenre] = useState('');
-    const [season, setSeason] = useState('');
+    const [seasons, setSeason] = useState('');
     const [synopsis, setSynopsis] = useState('');
     const router = useRouter();
     const { colors } = useThemeContext();
     const globalStyles = GlobalStyle(colors);
-    const scrollViewRef = useRef<ScrollView>(null);
+    const serive = SerieService();
+    const userService = UserService();
 
-    //data base
     const handleSave = async () => {
-        const newSerie = {
+        if (!title || !year || !genre || !seasons) {
+            alert('Title, year, genre, and seasons are required fields.');
+            return;
+        }
+
+        if (isNaN(Number(year)) || year.length !== 4) {
+            alert('Year must be a 4-digit number.');
+            return;
+        }
+
+        const user = userService.getCurrentUser();
+        if (!user) {
+            alert('User not logged in');
+            return;
+        }
+
+        const serieData = {
             title,
-            year,
+            year: Number(year),
             genre,
-            season,
+            seasons: Number(seasons),
             synopsis,
-            image: image.uri || null
+            user_id: user.id
         };
 
         try {
-            await axios.post(`http://${IP}:3001/series`, newSerie);
-            alert('The series was saved successfully!');
-            router.back()
-        } catch (error) {
-            console.log(error);
-            alert('Erro ao salvar serieError! The series cannot be saved.!');
+            let response;
+            
+            if (image.uri && image.uri !== require('../../assets/images/default-image.png')) {
+                const formData = new FormData();
+                
+                formData.append('title', serieData.title);
+                formData.append('year', serieData.year.toString());
+                formData.append('genre', serieData.genre);
+                formData.append('seasons', serieData.seasons.toString());
+                formData.append('synopsis', serieData.synopsis);
+                formData.append('user_id', serieData.user_id);
+                
+                formData.append('image', {
+                    uri: image.uri,
+                    type: 'image/jpeg',
+                    name: 'serie-image.jpg'
+                } as any);
+                
+                response = await serive.createSerie(formData);
+            } else {
+                response = await serive.createSerie(serieData);
+            }
+            
+            if (response) {
+                alert('The series was saved successfully!');
+                router.back();
+            } else {
+                alert('Error! The series cannot be saved.');
+            }
+        } catch (error: any) {
+            console.error('Error creating series:', error);
+            alert('Error! The series cannot be saved.');
         }
     }
 
@@ -105,7 +147,7 @@ export default function FormSerieAdd() {
                         style={[styles.inputForm, globalStyles.input]}
                         placeholder='Nº of seasons'
                         placeholderTextColor={colors.opacity}
-                        value={season}
+                        value={seasons}
                         onChangeText={setSeason}
                     />
                     <TextInput 
@@ -163,30 +205,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    /*uploadImage: {
-        backgroundColor: '#D1D1D6',
-        borderColor: '#007AFF',
-        borderWidth: 3,
-        borderRadius: 9,
-        marginTop: 32,
-        marginBottom: 9, 
-        //paddingTop: 19,
-        //paddingBottom: 12,
-        justifyContent: 'center',
-        alignItems: 'center',   
-    },*/
     image: {
         borderWidth: 3,
         borderRadius: 9,
-
         width: 320,
         height: 160,
         marginBottom: 9,
-    },
-    yearPicker: {
-        borderRadius: 9,
-        margin: 9,
-        backgroundColor: '#007AFF',
-        color: 'black'
     }
 })

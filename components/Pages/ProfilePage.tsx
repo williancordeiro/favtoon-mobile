@@ -74,7 +74,7 @@ export default function ProfilePage() {
           const user = service.getCurrentUser();
           await service.updateUserImage(user.id, imageUri);
           alert('Image updated successfully!');
-          fetchUser(); // <-- Atualiza o estado com o novo avatar
+          fetchUser();
         } catch (error) {
           alert('Failed to update image');
           console.error('Error updating image:', error);
@@ -95,6 +95,16 @@ export default function ProfilePage() {
         const avatarUri = pb.files.getURL(user, user.avatar);
         setIcon({ uri: avatarUri });
       }
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await service.logout();
+      router.push('/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      alert('Failed to log out');
     }
   }
 
@@ -192,7 +202,7 @@ export default function ProfilePage() {
                   ) : (
                     <TouchableOpacity
                       style={[styles.exitButton, {backgroundColor: colors.danger}]}
-                      //onPress={/* função de logout */}
+                      onPress={handleLogout}
                     >
                       <Text style={[{fontSize: 28, color: '#FFFFFF', fontWeight: 'bold'}]}>Exit</Text>
                     </TouchableOpacity>

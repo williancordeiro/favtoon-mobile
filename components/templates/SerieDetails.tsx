@@ -6,6 +6,8 @@ import { IP } from '@/data/adress';
 import { router } from 'expo-router';
 import { useThemeContext } from '../context/ThemeContext';
 import { GlobalStyle } from '../Style/GlobalStyle';
+import SerieService from '@/src/services/SerieService';
+import UserService from '@/src/services/UserService';
 
 type SerieDetailsProps = {
     image: ImageSourcePropType;
@@ -29,26 +31,36 @@ export default function SerieDetails({ image, title, year, genre, season, synops
   const [newSynopsis, setNewSynopsis] = useState(synopsis);
   const { colors } = useThemeContext();
   const globalStyles = GlobalStyle(colors);
+  const service = SerieService();
+  const userService = UserService();
 
   const editSerie = async () => {
     try {
-      await axios.patch(`http://${IP}:3001/series/${id}`, {
+      const currentUser = userService.getCurrentUser();
+      if (!currentUser) {
+        Alert.alert('Error', 'User not authenticated. Please login again.');
+        router.replace('/login');
+        return;
+      }
+
+      await service.updateSerie(String(id), {
         title: newTitle,
         year: Number(newYear),
         genre: newGenre,
-        season: Number(newSeason),
+        seasons: Number(newSeason),
         synopsis: newSynopsis,
       });
+
       Alert.alert('Success!', 'The series was saved successfully!');
       setEditing(false);
-      router.back()
+      router.back();
     } catch (error) {
-      console.error('Erro ao editar serie \n', error);
+      console.error('Error editing series:\n', error);
       Alert.alert('Error', 'The series was not saved');
     }
   }
 
-  const deleteSerie = (id: string | number) => {
+  const deleteSerie = async (id: string | number) => {
     Alert.alert(
       'Confirm',
       'Are you sure you want to delete the series?',
@@ -62,11 +74,11 @@ export default function SerieDetails({ image, title, year, genre, season, synops
           style: 'destructive',
           onPress: async () => {
             try {
-              await axios.delete(`http://${IP}:3001/series/${id}`);
+              await service.deleteSerie(String(id));
               Alert.alert('Deleted', 'Series removed successfully.');
               router.back();
             } catch (error) {
-              console.log('Erro ao excluir serie:\n', error);
+              console.log('Error deleting series:\n', error);
               Alert.alert('Error', 'Error deleting the series.');
             }
           },

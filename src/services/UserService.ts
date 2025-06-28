@@ -21,8 +21,8 @@ export default function UserService() {
 
     const getCurrentUser = () => {
         const user = pb.authStore.model;
-        if (!user) {
-            throw new Error('No user is currently logged in');
+        if (!user || !pb.authStore.isValid) {
+            return null;
         }
         return user;
     }
@@ -45,8 +45,8 @@ export default function UserService() {
             await AsyncStorage.setItem('user_token', pb.authStore.token);
             await AsyncStorage.setItem('user_model', JSON.stringify(pb.authStore.model));
             return authData;
-        } catch (error) {
-            console.error('Error logging in:', error);
+        } catch (error: any) {
+            console.error('Error logging in:', error, error.message);
             throw error;
         }
     }
