@@ -72,9 +72,13 @@ export default function ProfilePage() {
 
         try {
           const user = service.getCurrentUser();
-          await service.updateUserImage(user.id, imageUri);
-          alert('Image updated successfully!');
-          fetchUser();
+          if (user) {
+            await service.updateUserImage(user.id, imageUri);
+            alert('Image updated successfully!');
+            fetchUser();
+          } else {
+            alert('User not found. Please log in again.');
+          }
         } catch (error) {
           alert('Failed to update image');
           console.error('Error updating image:', error);

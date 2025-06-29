@@ -5,7 +5,7 @@ import { GlobalStyle } from '../Style/GlobalStyle';
 import UserService from '@/src/services/UserService';
 import { router } from 'expo-router';
 
-export default function FormLogin() {
+export default function FormRegister() {
     const { colors } = useThemeContext();
     const globalStyles = GlobalStyle(colors);
     
