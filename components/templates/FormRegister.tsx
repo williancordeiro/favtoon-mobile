@@ -32,8 +32,8 @@ export default function FormRegister() {
 
        service.createUser(email, password, confirmPassword, name, username)
            .then(() => {
-               alert('User registered successfully');
-               router.push('/(tabs)/');
+               //alert('User registered successfully');
+               router.push('/login');
            })
            .catch((error: any) => {
                //alert('Error registering user: ' + JSON.stringify(error?.data || error));
@@ -79,6 +79,7 @@ export default function FormRegister() {
         />
 
         <TouchableOpacity
+            testID='register-button'
             style={[globalStyles.btn, styles.btn]}
             onPress={handleRegister}
         >

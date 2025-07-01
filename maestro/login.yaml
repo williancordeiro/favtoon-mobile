@@ -1,0 +1,12 @@
+appId: com.anonymous.favtoonmobile
+---
+# Teste 3: Verifica se o usuário cadastrado realiza login com sucesso
+- launchApp
+- assertVisible: "Login"
+- tapOn: "email. . ."
+- inputText: "tester@test.com"
+- tapOn: "password. . ."
+- inputText: "password123"
+- tapOn:
+    id: "login-button"
+- assertVisible: "Home"

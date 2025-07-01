@@ -120,7 +120,7 @@ export default function FormSerieAdd() {
                     </TouchableOpacity>
                     <TextInput 
                         style={[styles.inputForm, globalStyles.input]}
-                        placeholder='Serie title. . .'
+                        placeholder='Title. . .'
                         placeholderTextColor={colors.opacity}
                         value={title}
                         onChangeText={setTitle}
@@ -152,15 +152,15 @@ export default function FormSerieAdd() {
                     />
                     <TextInput 
                         style={[styles.inputFormSinopse, globalStyles.input]}
-                        placeholder='Sinopse. . .'
+                        placeholder='Synopsis. . .'
                         placeholderTextColor={colors.opacity}
                         value={synopsis}
                         onChangeText={setSynopsis}
                         multiline={true}
                         numberOfLines={6}
                     />
-                    <TouchableOpacity style={[styles.buttonForm, globalStyles.btn]} onPress={handleSave} >
-                        <Text style={[{color: '#FFFFFF', fontSize: 21, fontWeight: 'bold'}]}>Salvar</Text>
+                    <TouchableOpacity testID='save-serie-button' style={[styles.buttonForm, globalStyles.btn]} onPress={handleSave} >
+                        <Text style={[{color: '#FFFFFF', fontSize: 21, fontWeight: 'bold'}]}>Save Serie</Text>
                     </TouchableOpacity>
                 </View>
             </TouchableNativeFeedback>

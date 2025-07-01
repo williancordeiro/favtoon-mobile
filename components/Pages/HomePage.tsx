@@ -104,7 +104,10 @@ export default function HomePage() {
             <Search style={[{}]} placeholder='Search. . .' placeholderTextColor='grey' value={query} onChangeText={setQuery}></Search>
         </View>
         <View style={styles.btn}>
-            <AddBtn onPress={addSerie} />
+            <AddBtn
+                testID='add-serie-button'
+                onPress={addSerie}
+            />
         </View>
         <View style={styles.main}>
             <FlatList

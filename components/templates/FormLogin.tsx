@@ -21,7 +21,7 @@ export default function FormLogin() {
 
         service.login(email, password)
             .then(() => {
-                alert('Login successful');
+                //alert('Login successful');
                 router.push('/(tabs)/');
             })
             .catch((error: any) => {
@@ -50,6 +50,7 @@ export default function FormLogin() {
         />
 
         <TouchableOpacity
+            testID='login-button'
             style={[globalStyles.btn, styles.btn]}
             onPress={handleLogin}
         >
