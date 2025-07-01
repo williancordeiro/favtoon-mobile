@@ -1,0 +1,29 @@
+appId: com.anonymous.favtoonmobile
+---
+# Teste 4: Adiciona uma serie e verifica se ela foi adicionada com sucesso
+- assertVisible: "Home"
+- assertVisible:
+    id: "add-serie-button"
+- tapOn:
+    id: "add-serie-button"
+- assertVisible: "Add Serie"
+- tapOn: "Title. . ."
+- inputText: "Test Serie"
+- tapOn: "2025"
+- inputText: "2025"
+- tapOn: "Genre. . ."
+- inputText: "Action"
+- tapOn: "Nº of seasons"
+- inputText: "1"
+- tapOn: "Synopsis. . ."
+- inputText: "This is a test serie"
+- assertVisible:
+    id: "save-serie-button"
+- tapOn:
+    id: "save-serie-button"
+- tapOn:
+    id: "save-serie-button"
+- assertVisible: "The series was saved successfully!"
+- tapOn: "OK"
+- assertVisible: "Home"
+- assertVisible: "Test Serie"

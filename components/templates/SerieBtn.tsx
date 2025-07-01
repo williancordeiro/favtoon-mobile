@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageSourcePropType } from 'react-native'
 import React from 'react'
+import { useThemeContext } from '../context/ThemeContext';
 
 type SerieBtnProps = {
     title: string;
@@ -8,11 +9,12 @@ type SerieBtnProps = {
 };
 
 export default function SerieBtn({title, image, onPress }: SerieBtnProps) {
+  const { colors } = useThemeContext();
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress}>
-        <Image source={image} style={styles.image}/>
-        <Text style={styles.title}>{title}</Text>
+        <Image source={image} style={[{...styles.image, borderColor: colors.primary}]}/>
+        <Text style={[{...styles.title, backgroundColor: colors.primary, color: colors.text}]}>{title}</Text>
       </TouchableOpacity>
     </View>
   )
@@ -28,15 +30,12 @@ const styles = StyleSheet.create({
     },
     image: {
         borderWidth: 1,
-        borderColor: '#007AFF',
         borderTopEndRadius: 9,
         borderTopStartRadius: 9,
         width: 346,
         height: 160,
     },
     title: {
-        backgroundColor: '#007AFF',
-        color: '#FFFFFF',
         paddingVertical: 12,
         paddingStart: 9,
         fontSize: 16,

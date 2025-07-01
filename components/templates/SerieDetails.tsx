@@ -1,9 +1,13 @@
-import { View, Text, Image, ImageSourcePropType, StyleSheet, TextInput, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, Image, ImageSourcePropType, StyleSheet, TextInput, ScrollView, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useActionSheet } from '@expo/react-native-action-sheet'
 import axios from 'axios';
 import { IP } from '@/data/adress';
 import { router } from 'expo-router';
+import { useThemeContext } from '../context/ThemeContext';
+import { GlobalStyle } from '../Style/GlobalStyle';
+import SerieService from '@/src/services/SerieService';
+import UserService from '@/src/services/UserService';
 
 type SerieDetailsProps = {
     image: ImageSourcePropType;
@@ -25,26 +29,38 @@ export default function SerieDetails({ image, title, year, genre, season, synops
   const [newGenre, setNewGenre] = useState(genre);
   const [newSeason, setNewSeason] = useState(season.toString());
   const [newSynopsis, setNewSynopsis] = useState(synopsis);
+  const { colors } = useThemeContext();
+  const globalStyles = GlobalStyle(colors);
+  const service = SerieService();
+  const userService = UserService();
 
   const editSerie = async () => {
     try {
-      await axios.patch(`http://${IP}:3001/series/${id}`, {
+      const currentUser = userService.getCurrentUser();
+      if (!currentUser) {
+        Alert.alert('Error', 'User not authenticated. Please login again.');
+        router.replace('/login');
+        return;
+      }
+
+      await service.updateSerie(String(id), {
         title: newTitle,
         year: Number(newYear),
         genre: newGenre,
-        season: Number(newSeason),
+        seasons: Number(newSeason),
         synopsis: newSynopsis,
       });
+
       Alert.alert('Success!', 'The series was saved successfully!');
       setEditing(false);
-      router.back()
+      router.back();
     } catch (error) {
-      console.error('Erro ao editar serie \n', error);
+      console.error('Error editing series:\n', error);
       Alert.alert('Error', 'The series was not saved');
     }
   }
 
-  const deleteSerie = (id: string | number) => {
+  const deleteSerie = async (id: string | number) => {
     Alert.alert(
       'Confirm',
       'Are you sure you want to delete the series?',
@@ -58,11 +74,11 @@ export default function SerieDetails({ image, title, year, genre, season, synops
           style: 'destructive',
           onPress: async () => {
             try {
-              await axios.delete(`http://${IP}:3001/series/${id}`);
+              await service.deleteSerie(String(id));
               Alert.alert('Deleted', 'Series removed successfully.');
               router.back();
             } catch (error) {
-              console.log('Erro ao excluir serie:\n', error);
+              console.log('Error deleting series:\n', error);
               Alert.alert('Error', 'Error deleting the series.');
             }
           },
@@ -99,42 +115,48 @@ export default function SerieDetails({ image, title, year, genre, season, synops
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <Image style={styles.image} source={image} />
-        <View style={styles.main}>
-          <View style={styles.detailGroup}>
-            <Text style={styles.title}>Title:</Text>
-            <TextInput style={styles.text} value={newTitle} onChangeText={setNewTitle} editable={editing} />
+      <KeyboardAvoidingView 
+                  style={[{flex: 1,}]} 
+                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+                  keyboardVerticalOffset={80} 
+      >
+        <ScrollView>
+          <Image style={styles.image} source={image} />
+          <View style={styles.main}>
+            <View style={styles.detailGroup}>
+              <Text style={[globalStyles.title, styles.title]}>Title:</Text>
+              <TextInput style={styles.text} value={newTitle} onChangeText={setNewTitle} editable={editing} />
+            </View>
+            <View style={styles.detailGroup}>
+              <Text style={[globalStyles.title, styles.title]}>Year:</Text>
+              <TextInput style={styles.text} value={newYear} onChangeText={setNewYear} editable={editing} />
+            </View>
+            <View style={styles.detailGroup}>
+              <Text style={[globalStyles.title, styles.title]}>Genre:</Text>
+              <TextInput style={styles.text} value={newGenre} onChangeText={setNewGenre} editable={editing} />
+            </View>
+            <View style={styles.detailGroup}>
+              <Text style={[globalStyles.title, styles.title]}>N° of Seasons:</Text>
+              <TextInput style={styles.text} value={newSeason} onChangeText={setNewSeason} editable={editing} />
+            </View>
+            <View style={styles.detailGroup}>
+              <Text style={[globalStyles.title, styles.title]} >Synopsis:</Text>
+              <TextInput style={styles.textArea} multiline={true} numberOfLines={14} value={newSynopsis} onChangeText={setNewSynopsis} editable={editing} />
+            </View>
           </View>
-          <View style={styles.detailGroup}>
-            <Text style={styles.title}>Year:</Text>
-            <TextInput style={styles.text} value={newYear} onChangeText={setNewYear} editable={editing} />
+          <View style={styles.btn}>
+            {editing ? (
+              <TouchableOpacity style={styles.btnOptions} onPress={editSerie} >
+                <Text style={styles.btnTxt}>Save</Text>
+              </TouchableOpacity>  
+            ) : (
+            <TouchableOpacity style={styles.btnOptions} onPress={onPress} >
+              <Text style={styles.btnTxt}>Options</Text>
+            </TouchableOpacity>
+            )}
           </View>
-          <View style={styles.detailGroup}>
-            <Text style={styles.title}>Genre:</Text>
-            <TextInput style={styles.text} value={newGenre} onChangeText={setNewGenre} editable={editing} />
-          </View>
-          <View style={styles.detailGroup}>
-            <Text style={styles.title}>N° of Seasons:</Text>
-            <TextInput style={styles.text} value={newSeason} onChangeText={setNewSeason} editable={editing} />
-          </View>
-          <View style={styles.detailGroup}>
-            <Text style={styles.title} >Synopsis:</Text>
-            <TextInput style={styles.textArea} multiline={true} numberOfLines={14} value={newSynopsis} onChangeText={setNewSynopsis} editable={editing} />
-          </View>
-        </View>
-        <View style={styles.btn}>
-          {editing ? (
-            <TouchableOpacity style={styles.btnOptions} onPress={editSerie} >
-              <Text style={styles.btnTxt}>Save</Text>
-            </TouchableOpacity>  
-          ) : (
-          <TouchableOpacity style={styles.btnOptions} onPress={onPress} >
-            <Text style={styles.btnTxt}>Options</Text>
-          </TouchableOpacity>
-          )}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   )
 }
@@ -160,9 +182,7 @@ const styles = StyleSheet.create({
     },
     title: {
       marginStart: 9,
-      color: '#007AFF',
       fontSize: 18,
-      fontWeight: 'bold',
       textAlign: 'left',
     },
     text: {

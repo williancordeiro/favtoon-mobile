@@ -3,17 +3,17 @@ import React, { useCallback, useEffect, useState } from 'react'
 import Search from '../Inputs/Search'
 import AddBtn from '../Btns/AddBtn';
 import { useFocusEffect, useRouter } from 'expo-router';
-//import series from '@/data/series.json';
 import SerieBtn from '../templates/SerieBtn';
-//import { imageMap } from '@/data/ImageMap';
-import axios from 'axios';
-import { IP } from '@/data/adress';
+import { useThemeContext } from '../context/ThemeContext';
+import { GlobalStyle } from '../Style/GlobalStyle';
+import SerieService from '@/src/services/SerieService';
+import UserService from '@/src/services/UserService';
 
 
 type Serie = {
     id: string | number;
     title: string;
-    image: string;
+    image: string | null;
 }
 
 export default function HomePage() {
@@ -21,56 +21,66 @@ export default function HomePage() {
     const [series, setSeries] = useState<Serie[]>([]);
     const [loading, setLoading] = useState(true)
     const [query, setQuery] = useState('');
+    const { colors } = useThemeContext();
+    const globalStyles = GlobalStyle(colors);
+    const service = SerieService();
+    const userService = UserService();
 
     const addSerie = () => {
         router.navigate('/(stack)/add');
     }
 
-    const handlePress = (item: {id: string, title: string}) => {
+    const handlePress = (serie: Serie) => {
         router.push({
-            pathname: '/(stack)/[id]',
-            params: { id: item.id ,title: item.title }
-        })
-    }
+            pathname: `/(stack)/[id]`,
+            params: { id: serie.id.toString(), title: serie.title }
+        });
+    };
 
-    /*useEffect(() => {
-        const fetchSearch = async () => {
-            try {
-                const response = await fetch(`http://${IP}:3001/series?title_like=${query}`);
-                const result = await response.json();
-                setSeries(result);
-            } catch (error) {
-                console.log('Erro ao buscar serie:\n', error);
+    const fetchSeries = async () => {
+        try {
+            setLoading(true);
+            
+            const user = userService.getCurrentUser();
+            if (!user) {
+                alert('User not logged in. Please login again.');
+                router.replace('/login');
+                return;
             }
+            
+            const response = await service.getSerieByUserId(user.id);
+            const seriesWithImages = await Promise.all(response.map(async (serie: any) => {
+                try {
+                    const image = await service.getSerieImage(serie);
+                    return {
+                        ...serie,
+                        image: image
+                    };
+                } catch (imageError) {
+                    return {
+                        ...serie,
+                        image: null
+                    };
+                }
+            }));
+            setSeries(seriesWithImages);
+        } catch (error: any) {
+            if (error.status === 401 || error.message?.includes('unauthorized')) {
+                alert('Session expired. Please login again.');
+                router.replace('/login');
+            } else {
+                alert(`Failed to load series: ${error.message || 'Unknown error'}`);
+            }
+        } finally {
+            setLoading(false);
         }
-
-        const timeOut = setTimeout(() => {
-            if (query)
-                fetchSearch();
-            else
-                setSeries([]);
-        }, 500);
-
-        return () => clearTimeout(timeOut);
-    }, [query]);*/
+    };
 
     useFocusEffect(
         useCallback(() => {
-        const fetchSeries = async () => {
-            try {
-                const response = await axios.get(`http://${IP}:3001/series`);
-                setSeries(response.data);
-            } catch (error) {
-                console.log('Erro ao buscar series no JSON server\n', error);
-                console.log(IP)
-            } finally {
-                setLoading(false);
-            }
-        };
-        
             fetchSeries();
         }, [])
-    )
+    );
 
     if (loading) {
         return (
@@ -89,23 +99,27 @@ export default function HomePage() {
     }
 
   return (
-    <View style={styles.container}>
+    <View style={[globalStyles.container, styles.container]}>
         <View style={styles.searchBar}>
             <Search style={[{}]} placeholder='Search. . .' placeholderTextColor='grey' value={query} onChangeText={setQuery}></Search>
         </View>
         <View style={styles.btn}>
-            <AddBtn onPress={addSerie} />
+            <AddBtn
+                testID='add-serie-button'
+                onPress={addSerie}
+            />
         </View>
         <View style={styles.main}>
-            <FlatList 
+            <FlatList
+                style={{marginBottom: '7%'}} 
                 data={series}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.id.toString()}                
                 renderItem={({ item }) => {
                     return (
                         <SerieBtn 
-                            image={{ uri: item.image }}
+                            image={item.image ? { uri: item.image } : require('@/assets/images/default-image.png')}
                             title={item.title}
-                            onPress={() => handlePress({id: item.id.toString(), title: item.title})}
+                            onPress={() => handlePress(item)}
                         />
                     )
                 }}                
@@ -117,15 +131,13 @@ export default function HomePage() {
 
 const styles = StyleSheet.create({
     container: {
-        fontFamily: 'Roboto',
         margin: 10,
-        marginBottom: 60,
     },
     searchBar: {
 
     },
     main: {
-
+        marginBottom: 0,
     },
     btn: {
         top: 530,

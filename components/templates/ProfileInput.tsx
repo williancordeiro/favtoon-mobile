@@ -1,55 +1,36 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TextInputProps, TouchableOpacityProps } from 'react-native'
 import React, { useState } from 'react'
 import Input from '../Inputs/Input'
 import EditBtn from '../Btns/EditBtn'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useThemeContext } from '../context/ThemeContext';
+
+type InputProps = TextInputProps;
+type BtnProps = TouchableOpacityProps;
 
 type ProfileInputProps = {
-    placeholder: string,
-    value?: string,
-    onChangeText: (text: string) => void,
-    secureTextEntry?: boolean,
+    inputProps?: InputProps;
+    btnProps?: BtnProps;
 }
 
+export default function ProfileInput({ inputProps, btnProps }: ProfileInputProps) {
+    const { colors } = useThemeContext();
 
-export default function ProfileInput({ placeholder, value, onChangeText, secureTextEntry }: ProfileInputProps) {
-    const [campEdit, setCampEdit] = useState(false);
-    const [isFocused, setIsFocused] = useState(false);
-
-    const focusTrue = () => {
-        setIsFocused(true);
-    }
-
-    const blur = () => {
-        setCampEdit(false);
-        setIsFocused(false);
-    }
-
-    const handlePress = () => {
-        setCampEdit(true);
-    }
 
     return (
-    <View style={styles.container}>
+    <View style={[styles.container, {borderColor: colors.primary}]}>
         <Input 
-            style={[styles.input, {color: isFocused ? 'black' : 'grey'}]} 
-            placeholderTextColor={'#D1D1D6'}
-            editable={campEdit}
-            onFocus={focusTrue}
-            onBlur={blur}
-            placeholder={placeholder}
-            value={value}
-            onChangeText={onChangeText}
-            secureTextEntry={secureTextEntry}
+            style={[styles.input, inputProps?.style]}
+            {...inputProps}
         >
 
         </Input>
-        <View style={styles.divider}></View>
+        <View style={[styles.divider, {borderColor: colors.primary}]}></View>
         <EditBtn 
             style={styles.btn}
-            onPress={handlePress}
+            {...btnProps}
         >
-            <FontAwesome name="pencil" size={26} color="#007AFF" />
+            <FontAwesome name="pencil" size={26} style={[{color: colors.primary}]} />
         </EditBtn>
     </View>
   )
@@ -61,7 +42,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderWidth: 3,
         borderRadius: 9,
-        borderColor: '#007AFF',
         marginBottom: 9,
     },
     input: {

@@ -1,0 +1,23 @@
+appId: com.anonymous.favtoonmobile
+---
+# Teste 1: Verificar o fluxo de login e registro
+- launchApp
+- assertVisible: "Login"
+- tapOn: "Register"
+- assertVisible: "Register"
+
+# Teste 2: Verifica possibilidade de registro no aplicativo
+- tapOn: "name. . ."
+- inputText: "Tester"
+- tapOn: "email. . ."
+- inputText: "tester@test.com"
+- tapOn: "password. . ."
+- inputText: "password123"
+- tapOn: "confirm pass. . ."
+- inputText: "password123"
+- assertVisible:
+    id: "register-button"
+- tapOn:
+    id: "register-button"
+- tapOn:
+    id: "register-button"

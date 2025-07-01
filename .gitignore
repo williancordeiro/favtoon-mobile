@@ -6,6 +6,7 @@ node_modules/
 # Expo
 .expo/
 dist/
+android/
 web-build/
 expo-env.d.ts
 
@@ -37,4 +38,7 @@ yarn-error.*
 *.tsbuildinfo
 
 # JSON server
-db1.json
+adress.ts
+db.json
+
+PocketBase.ts

@@ -1,9 +1,11 @@
 import { Text, TouchableOpacity, TouchableOpacityProps, StyleSheet } from 'react-native'
 import React from 'react'
+import { useThemeContext } from '../context/ThemeContext';
 
 export default function AddBtn(props: TouchableOpacityProps) {
+  const { colors } = useThemeContext();
   return (
-    <TouchableOpacity {...props} style={[styles.btn, props.style]}>
+    <TouchableOpacity {...props} style={[{...styles.btn, backgroundColor: colors.success}]}>
         <Text style={styles.txt}>+</Text>
     </TouchableOpacity>
   )
